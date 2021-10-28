@@ -64,7 +64,7 @@ df_total = df_total[df_total["Provincia"] != '38']
 df_total["Especie"] = df_total["Especie"].str.zfill(4)
 # Importa els codis de les espècies en un diccionari
 codi_especie = dict(pd.read_csv("codi_especies.csv", dtype=str).values)
-# Escriu el correponent nom de les espècies
+# Escriu el corresponent nom de les espècies
 df_total["Especie"] = df_total["Especie"].map(codi_especie) 
 # Descarta els registres nuls d'espècie (són 53)
 df_total = df_total[~df_total["Especie"].isna()]
