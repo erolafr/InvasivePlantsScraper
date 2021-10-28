@@ -51,7 +51,7 @@ df_list = []
 for file in os.listdir(downloads_full_path):
     provincia = re.search('Ifn3p(.*).mdb', file).group(1)
     # importa la taula PCMatorral 
-    df = pd.DataFrame(mdb.read_table(os.path.join(downloads_full_path, file), "PCMatorral"))
+    df = pd.DataFrame(mdb.read_table(os.path.join(downloads_full_path, file), "PCMayores"))
     df["Provincia"] = provincia
     df_list.append(df)
     os.remove(os.path.join(downloads_full_path, file))
@@ -60,13 +60,16 @@ df_total = pd.concat(df_list)
 
 # Descarta les dades de Canàries
 df_total = df_total[df_total["Provincia"] != '38']  
-# Emplena amb 0's l'espècie per coincidir codia amb els de "codi_especies.csv"
-df_total["Especie"] = df_total["Especie"].str.zfill(4)
+# Emplena amb 0's l'espècie per coincidir codi amb els de "codi_especies.csv"
+df_total["Especie"] = df_total["Especie"].str.zfill(3)
 # Importa els codis de les espècies en un diccionari
-codi_especie = dict(pd.read_csv("codi_especies.csv", dtype=str).values)
+codi_especie = dict(pd.read_csv("codi_especies.csv", sep=";", dtype=str).values)
 # Escriu el corresponent nom de les espècies
 df_total["Especie"] = df_total["Especie"].map(codi_especie) 
 # Descarta els registres nuls d'espècie (són 53)
 df_total = df_total[~df_total["Especie"].isna()]
+# Defineix les columnes com a numeriques
+df_total["Ht"] = pd.to_numeric(df_total["Ht"])
+df_total["Distanci"] = pd.to_numeric(df_total["Distanci"])
 # Exporta
 df_total.to_csv("ifn3.csv", index=False)   
