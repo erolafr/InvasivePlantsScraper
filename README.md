@@ -18,15 +18,25 @@ Cla: tipus String. Codi que determina si la parcel·la ja estava a l’IFN2, o s
 Subclasse: Tipus String. Codi que determina el tipus de parcel·la
 
 nArbol: Tipus enter. Número de l’arbre dins de la parcel·la
+
 OrdenIf3: Tipus enter. Número d’ordre de l’arbre en l’IFN3.
+
 OrdenIf2: Tipus enter. Número d’ordre de l’arbre en l’IFN2.
+
 Rumbo: Tipus enter. Angle que formen la direcció nord i la linea que uneix arbre i centre de la parcel·la. En sentit de les agulles del rellotge.
+
 Distanci: Tipus numèric. Distància en metres al centre de la parcel·la.
+
 Dn1: Diàmetre normal del arbre apuntant al centre de la parcel·la, en milímetres.
+
 Dn2: Diàmetre normal del arbre en direcció perpendicular a l’anterior, en milímetres.
+
 Hf: Tipus numèric, alçada total de l’arbre en metres.
+
 Calidad: Tipus enter. Codifica la qualitat de l’arbre. Pot ser:
+
   1: Arbre sa, vigorós òptimament conformat ambg excelents perspectives de futur, capaç de proporcionar productes valuosos.
+  
   2: Arbre sa, vigorós, no dominat amb algun defecte de conformació, capaç de proporcionar productes valuosos.
   3: Arbre no ttotalment sa i vigoros, vell o dominat pero capaç de proporcionar productes valuosos
   4: Arbre malalt i dèbil o vell, amb molts defectes de conformació, capaç de proporcionar productes de valor secundari
