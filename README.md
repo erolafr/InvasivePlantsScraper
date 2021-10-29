@@ -16,4 +16,4 @@ Erola Fenollosa i Xavier Pascuet
 
 ## Fitxers
 - ifn3_invasives.py: Conté el codi per a fer web scraping a l'Inventari Forestal i el llistat de flora invasora.
-- ifn3.csv: Dataset final
+- codi_espècies.csv: Relació dels codis utilitzats en l'Inventari forestal Nacional i el nom científic de les espècies
