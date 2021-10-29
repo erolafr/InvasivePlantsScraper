@@ -6,6 +6,7 @@ import urllib.request
 import pandas_access as mdb
 import zipfile
 import re
+import numpy as np
 
 
 url_1 = "https://www.miteco.gob.es/es/biodiversidad/servicios/banco-datos-naturaleza/informacion-disponible/ifn3_base_datos_1_25.aspx"
