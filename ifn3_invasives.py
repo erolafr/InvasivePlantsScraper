@@ -71,5 +71,23 @@ df_total = df_total[~df_total["Especie"].isna()]
 # Defineix les columnes com a numeriques
 df_total["Ht"] = pd.to_numeric(df_total["Ht"])
 df_total["Distanci"] = pd.to_numeric(df_total["Distanci"])
+
+# Descarreguem el llistat de flora invasora
+url_3='https://es.wikipedia.org/wiki/Anexo:Cat%C3%A1logo_Espa%C3%B1ol_de_Especies_Ex%C3%B3ticas_Invasoras'
+table_class="wikitable sortable jquery-tablesorter"
+page_inv=requests.get(url_3)
+soup = BeautifulSoup(page_inv.text, 'html.parser')
+speciestable=soup.find('table',{'class':"wikitable"})
+df=pd.read_html(str(speciestable))
+df=pd.DataFrame(df[0])
+
+#  Eliminem les espècies amb zona d'aplicació exclusiva a Canaries
+data = df.loc[df["Zona de aplicación"] != "Canarias"]
+species_list= data['Especie'].str.extract('(\w*\s\w*\.*)', expand=True) # Agafem les que tenen dues paraules i spp.
+species_list = species_list.values.tolist()
+
+# Comprovem quines estàn al llistat d'invasores:
+df_total['Is_invasive'] = np.where(df_total['Especie'].isin(species_list), "Yes", "No")
+
 # Exporta
 df_total.to_csv("ifn3.csv", index=False)   
