@@ -12,8 +12,11 @@ Les dades obtingudes en els inventaris de camp estan, en part, informatitzades e
 
 ## Contingut 
 Estadillo: Tipus Enter. Identificador de la parcel·la.
+
 Cla: tipus String. Codi que determina si la parcel·la ja estava a l’IFN2, o si s’inventaria per primera vegada.
+
 Subclasse: Tipus String. Codi que determina el tipus de parcel·la
+
 nArbol: Tipus enter. Número de l’arbre dins de la parcel·la
 OrdenIf3: Tipus enter. Número d’ordre de l’arbre en l’IFN3.
 OrdenIf2: Tipus enter. Número d’ordre de l’arbre en l’IFN2.
