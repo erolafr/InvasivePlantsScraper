@@ -11,29 +11,29 @@ L'Inventari forestal nacional (IFN) és el projecte que proporciona informació 
 Les dades obtingudes en els inventaris de camp estan, en part, informatitzades en bases de dades, a nivell de provincia, descarregables des de la web institucional.
 
 ## Contingut 
-Estadillo: Tipus Enter. Identificador de la parcel·la.
+**Estadillo**: Tipus Enter. Identificador de la parcel·la.
 
-Cla: tipus String. Codi que determina si la parcel·la ja estava a l’IFN2, o si s’inventaria per primera vegada.
+**Cla**: tipus String. Codi que determina si la parcel·la ja estava a l’IFN2, o si s’inventaria per primera vegada.
 
-Subclasse: Tipus String. Codi que determina el tipus de parcel·la
+**Subclasse**: Tipus String. Codi que determina el tipus de parcel·la
 
-nArbol: Tipus enter. Número de l’arbre dins de la parcel·la
+**nArbol**: Tipus enter. Número de l’arbre dins de la parcel·la
 
-OrdenIf3: Tipus enter. Número d’ordre de l’arbre en l’IFN3.
+**OrdenIf3**: Tipus enter. Número d’ordre de l’arbre en l’IFN3.
 
-OrdenIf2: Tipus enter. Número d’ordre de l’arbre en l’IFN2.
+**OrdenIf2**: Tipus enter. Número d’ordre de l’arbre en l’IFN2.
 
-Rumbo: Tipus enter. Angle que formen la direcció nord i la linea que uneix arbre i centre de la parcel·la. En sentit de les agulles del rellotge.
+**Rumbo**: Tipus enter. Angle que formen la direcció nord i la linea que uneix arbre i centre de la parcel·la. En sentit de les agulles del rellotge.
 
-Distanci: Tipus numèric. Distància en metres al centre de la parcel·la.
+**Distanci**: Tipus numèric. Distància en metres al centre de la parcel·la.
 
-Dn1: Diàmetre normal del arbre apuntant al centre de la parcel·la, en milímetres.
+**Dn1**: Diàmetre normal del arbre apuntant al centre de la parcel·la, en milímetres.
 
-Dn2: Diàmetre normal del arbre en direcció perpendicular a l’anterior, en milímetres.
+**Dn2**: Diàmetre normal del arbre en direcció perpendicular a l’anterior, en milímetres.
 
-Hf: Tipus numèric, alçada total de l’arbre en metres.
+**Hf**: Tipus numèric, alçada total de l’arbre en metres.
 
-Calidad: Tipus enter. Codifica la qualitat de l’arbre. Pot ser:
+**Calidad**: Tipus enter. Codifica la qualitat de l’arbre. Pot ser:
 - 1: Arbre sa, vigorós òptimament conformat ambg excelents perspectives de futur, capaç de proporcionar productes valuosos. 
 - 2: Arbre sa, vigorós, no dominat amb algun defecte de conformació, capaç de proporcionar productes valuosos.
 - 3: Arbre no ttotalment sa i vigoros, vell o dominat pero capaç de proporcionar productes valuosos
@@ -41,7 +41,7 @@ Calidad: Tipus enter. Codifica la qualitat de l’arbre. Pot ser:
 - 5: Arbre molt malat, dèbil o vell, amb pèssima conformació y aprofitaments d’escas valor.
 - 6: Arbre mort pero sense podrir.
   
-Forma: Tipus enter. Codificac la forma de l’arbre.
+**Forma**: Tipus enter. Codificac la forma de l’arbre.
 - 1: Arbres fusiformes en quasi la totalitat del troncm troncs fustaners de més de 6mm i diàmetre normal major de 20 cm.
 - 2: Arbres fusiformes, amb troncs fustaners de 4 metres o més, que no petanyen a la forma 1
 - 3: Arbres fusiformes petits, en els que el diàmetre de 75mm queda per sota els 4 metres d’alçada.
@@ -49,9 +49,9 @@ Forma: Tipus enter. Codificac la forma de l’arbre.
 - 5: Arbres amb el tronc principal tortuos, sanyat o amb moltes rames.
 - 6: Arbres escapçats.
   
-ParEsp: Tipu ester. Parametres especials. Codifica la qualitat de suros o resines.
+**ParEsp**: Tipu ester. Parametres especials. Codifica la qualitat de suros o resines.
 
-Agente: Tipus enter. Codifica l’agent causant del dany. Pot ser:
+**Agente**: Tipus enter. Codifica l’agent causant del dany. Pot ser:
 - 100: Sense danys
 - 200: Cause desconegudes
 - 310: Fongs
@@ -73,12 +73,12 @@ Agente: Tipus enter. Codifica l’agent causant del dany. Pot ser:
 - 422: Despreniments
 - 423: Erosió
   
-Import: Tipus enter. Codifica la importància del dany. Pot ser:
+**Import**: Tipus enter. Codifica la importància del dany. Pot ser:
 - 1: Petita
 - 2: Mitjana
 - 3: Gran
   
-Elemento: Tipus enter. Codi referent a l’element danyat. Pot ser:
+**Elemento**: Tipus enter. Codi referent a l’element danyat. Pot ser:
 - 1: Escorça
 - 2: Fulles
 - 3: Rames
@@ -88,13 +88,13 @@ Elemento: Tipus enter. Codi referent a l’element danyat. Pot ser:
 - 7: Guía terminal
 - 8: Copa
 - 9: Arbre sencer
-- 
-Provincia: Tipus enter. Codi de la provincia de la parcel·la d'inventari
 
-Is_invasive: Tipus text. Pren "Yes" o "No" segons si la espècie es invasora 
+**Provincia**: Tipus enter. Codi de la provincia de la parcel·la d'inventari
+
+**Is_invasive**: Tipus text. Pren "Yes" o "No" segons si la espècie es invasora 
 
 ## Enllaços:
-https://zenodo.org/record/5616003#.YXvboJuxVl8 :Versió reduïda del dataset obtingut
+https://zenodo.org/record/5616003#.YXvboJuxVl8 : Versió reduïda del dataset obtingut
 
 Inventari forestal: https://www.miteco.gob.es/es/biodiversidad/servicios/banco-datos-naturaleza/informacion-disponible/ifn3_bbdd_descargas.htm.aspx
 Llistat plantes invasores: https://www.miteco.gob.es/es/biodiversidad/temas/conservacion-de-especies/especies-exoticas-invasoras/ce_eei_flora.aspx
