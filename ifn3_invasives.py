@@ -59,6 +59,8 @@ for file in os.listdir(downloads_full_path):
 
 df_total = pd.concat(df_list)
 
+# Elimina columnes que no interessen
+df_total.drop(['DRed', 'Distancia', 'Compara'], axis=1, inplace=True)
 # Descarta les dades de Canàries
 df_total = df_total[df_total["Provincia"] != '38']  
 # Emplena amb 0's l'espècie per coincidir codi amb els de "codi_especies.csv"
