@@ -34,14 +34,14 @@ Dn2: Diàmetre normal del arbre en direcció perpendicular a l’anterior, en mi
 Hf: Tipus numèric, alçada total de l’arbre en metres.
 
 Calidad: Tipus enter. Codifica la qualitat de l’arbre. Pot ser:
-
-  1: Arbre sa, vigorós òptimament conformat ambg excelents perspectives de futur, capaç de proporcionar productes valuosos.
+- 1: Arbre sa, vigorós òptimament conformat ambg excelents perspectives de futur, capaç de proporcionar productes valuosos. 
+- 2: Arbre sa, vigorós, no dominat amb algun defecte de conformació, capaç de proporcionar productes valuosos.
   
-  2: Arbre sa, vigorós, no dominat amb algun defecte de conformació, capaç de proporcionar productes valuosos.
-  3: Arbre no ttotalment sa i vigoros, vell o dominat pero capaç de proporcionar productes valuosos
-  4: Arbre malalt i dèbil o vell, amb molts defectes de conformació, capaç de proporcionar productes de valor secundari
+  - 3: Arbre no ttotalment sa i vigoros, vell o dominat pero capaç de proporcionar productes valuosos
+  - 4: Arbre malalt i dèbil o vell, amb molts defectes de conformació, capaç de proporcionar productes de valor secundari
   5: Arbre molt malat, dèbil o vell, amb pèssima conformació y aprofitaments d’escas valor.
   6: Arbre mort pero sense podrir.
+  
 Forma: Tipus enter. Codificac la forma de l’arbre.
   1: Arbres fusiformes en quasi la totalitat del troncm troncs fustaners de més de 6mm i diàmetre normal major de 20 cm.
   2: Arbres fusiformes, amb troncs fustaners de 4 metres o més, que no petanyen a la forma 1
@@ -49,7 +49,9 @@ Forma: Tipus enter. Codificac la forma de l’arbre.
   4: Arbres amb el tronc ramificat abans dels 4 metres d’alçada.
   5: Arbres amb el tronc principal tortuos, sanyat o amb moltes rames.
   6: Arbres escapçats.
+  
 ParEsp: Tipu ester. Parametres especials. Codifica la qualitat de suros o resines.
+
 Agente: Tipus enter. Codifica l’agent causant del dany. Pot ser:
   100: Sense danys
   200: Cause desconegudes
@@ -71,11 +73,13 @@ Agente: Tipus enter. Codifica l’agent causant del dany. Pot ser:
   421: Foc
   422: Despreniments
   423: Erosió
+  
 Import: Tipus enter. Codifica la importància del dany. Pot ser:
   1: Petita
   2: Mitjana
   3: Gran
-Elemento: Tipus Enter. Codi referent a l’element danyat. Pot ser:
+  
+Elemento: Tipus enter. Codi referent a l’element danyat. Pot ser:
   1: Escorça
   2: Fulles
   3: Rames
@@ -85,8 +89,9 @@ Elemento: Tipus Enter. Codi referent a l’element danyat. Pot ser:
   7: Guía terminal
   8: Copa
   9: Arbre sencer
-Provincia: Tipus Enter. Codi de la provincia de la parcel·la d'inventari
-Is_invasives: Tipus Text. Pren "Yes" o "No" segons si la espècie es invasora 
+Provincia: Tipus enter. Codi de la provincia de la parcel·la d'inventari
+
+Is_invasives: Tipus text. Pren "Yes" o "No" segons si la espècie es invasora 
 
 ## Enllaços:
 https://zenodo.org/record/5616003#.YXvboJuxVl8 :Versió reduïda del dataset obtingut
