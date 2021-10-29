@@ -36,62 +36,62 @@ Hf: Tipus numèric, alçada total de l’arbre en metres.
 Calidad: Tipus enter. Codifica la qualitat de l’arbre. Pot ser:
 - 1: Arbre sa, vigorós òptimament conformat ambg excelents perspectives de futur, capaç de proporcionar productes valuosos. 
 - 2: Arbre sa, vigorós, no dominat amb algun defecte de conformació, capaç de proporcionar productes valuosos.
-  
-  - 3: Arbre no ttotalment sa i vigoros, vell o dominat pero capaç de proporcionar productes valuosos
-  - 4: Arbre malalt i dèbil o vell, amb molts defectes de conformació, capaç de proporcionar productes de valor secundari
-  5: Arbre molt malat, dèbil o vell, amb pèssima conformació y aprofitaments d’escas valor.
-  6: Arbre mort pero sense podrir.
+- 3: Arbre no ttotalment sa i vigoros, vell o dominat pero capaç de proporcionar productes valuosos
+- 4: Arbre malalt i dèbil o vell, amb molts defectes de conformació, capaç de proporcionar productes de valor secundari
+- 5: Arbre molt malat, dèbil o vell, amb pèssima conformació y aprofitaments d’escas valor.
+- 6: Arbre mort pero sense podrir.
   
 Forma: Tipus enter. Codificac la forma de l’arbre.
-  1: Arbres fusiformes en quasi la totalitat del troncm troncs fustaners de més de 6mm i diàmetre normal major de 20 cm.
-  2: Arbres fusiformes, amb troncs fustaners de 4 metres o més, que no petanyen a la forma 1
-  3: Arbres fusiformes petits, en els que el diàmetre de 75mm queda per sota els 4 metres d’alçada.
-  4: Arbres amb el tronc ramificat abans dels 4 metres d’alçada.
-  5: Arbres amb el tronc principal tortuos, sanyat o amb moltes rames.
-  6: Arbres escapçats.
+- 1: Arbres fusiformes en quasi la totalitat del troncm troncs fustaners de més de 6mm i diàmetre normal major de 20 cm.
+- 2: Arbres fusiformes, amb troncs fustaners de 4 metres o més, que no petanyen a la forma 1
+- 3: Arbres fusiformes petits, en els que el diàmetre de 75mm queda per sota els 4 metres d’alçada.
+- 4: Arbres amb el tronc ramificat abans dels 4 metres d’alçada.
+- 5: Arbres amb el tronc principal tortuos, sanyat o amb moltes rames.
+- 6: Arbres escapçats.
   
 ParEsp: Tipu ester. Parametres especials. Codifica la qualitat de suros o resines.
 
 Agente: Tipus enter. Codifica l’agent causant del dany. Pot ser:
-  100: Sense danys
-  200: Cause desconegudes
-  310: Fongs
-  311: Insectes
-  312: Vesc
-  313: Plantes epífites
-  314: Fauna silvestre
-  315: Bestiar
-  320: Maquinària
-  321: Treta de fusta
-  322: Home en general
-  410: Neu
-  411: Vent
-  412: Sequera
-  413: LLamp
-  414: Gelades
-  415: Calamarsa
-  421: Foc
-  422: Despreniments
-  423: Erosió
+- 100: Sense danys
+- 200: Cause desconegudes
+- 310: Fongs
+- 311: Insectes
+- 312: Vesc
+- 313: Plantes epífites
+- 314: Fauna silvestre
+- 315: Bestiar
+- 320: Maquinària
+- 321: Treta de fusta
+- 322: Home en general
+- 410: Neu
+- 411: Vent
+- 412: Sequera
+- 413: LLamp
+- 414: Gelades
+- 415: Calamarsa
+- 421: Foc
+- 422: Despreniments
+- 423: Erosió
   
 Import: Tipus enter. Codifica la importància del dany. Pot ser:
-  1: Petita
-  2: Mitjana
-  3: Gran
+- 1: Petita
+- 2: Mitjana
+- 3: Gran
   
 Elemento: Tipus enter. Codi referent a l’element danyat. Pot ser:
-  1: Escorça
-  2: Fulles
-  3: Rames
-  4: Tronc
-  5: Fruits
-  6: Flors
-  7: Guía terminal
-  8: Copa
-  9: Arbre sencer
+- 1: Escorça
+- 2: Fulles
+- 3: Rames
+- 4: Tronc
+- 5: Fruits
+- 6: Flors
+- 7: Guía terminal
+- 8: Copa
+- 9: Arbre sencer
+- 
 Provincia: Tipus enter. Codi de la provincia de la parcel·la d'inventari
 
-Is_invasives: Tipus text. Pren "Yes" o "No" segons si la espècie es invasora 
+Is_invasive: Tipus text. Pren "Yes" o "No" segons si la espècie es invasora 
 
 ## Enllaços:
 https://zenodo.org/record/5616003#.YXvboJuxVl8 :Versió reduïda del dataset obtingut
