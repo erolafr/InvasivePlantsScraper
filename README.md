@@ -22,4 +22,4 @@ Erola Fenollosa i Xavier Pascuet
 ## Fitxers
 - MemòriaPRA1.pdf: Conté les respostes als apartats demanats a la PRA1 amb descripció i context del dataset així com descripció del contingut, inspiració, agraïments i llicència.
 - ifn3_invasives.py: Conté el codi per a fer web scraping a l'Inventari Forestal i el llistat de flora invasora.
-- codi_espècies.csv: Relació dels codis utilitzats en l'Inventari forestal Nacional i el nom científic de les espècies.
+- codi_espècies.csv: Relació dels codis utilitzats en l'Inventari forestal Nacional i el nom científic de les espècies. Necesari per si es vol reproduir el codi.
