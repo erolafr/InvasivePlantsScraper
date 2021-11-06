@@ -1,4 +1,4 @@
-# InvasivePlantsSraper
+# InvasivePlantsScraper
 
 ## Biodiversitat arbustiva i arbòria nativa i invasora a Espanya
 ## Descripció
