@@ -31,7 +31,12 @@ Qualitat de l’arbrat i la seva relació amb la biodiversitat,i riquesa tant na
 Explicar hipotesis i conceptes: indexs, què signifiquen les variables…
 
 ### 2. Integració i selecció de les dades d’interès a analitzar. 
-Importem el csv:
+Imporem les llibreries necesaries
+```{r}
+library(dplyr)
+```
+
+Importem el csv
 ```{r}
 ifn3 <- read.csv("ifn3.csv")
 ```
@@ -41,7 +46,7 @@ Revisió de quines variables hi ha i fer subset d’algunes
 #Revisem l'estructura global del dataset importat
 str(ifn3)
 
-library(dplyr)
+
 # Seleccionem les variables d'interès
 ifn3_subset <- select(ifn3, c(Estadillo, Especie, Calidad, Provincia, Is_invasive))
 
@@ -55,10 +60,17 @@ Comptabilitzar casos amb zeros o elements buits en valor absolut i en percentatg
 ```{r}
 colSums(is.na(ifn3_subset))
 ```
+HI ha uns quans valors nuls de qualitat. Visualizem un resum de les dades originals amb nulls a  qualitat:
 
-Discutir què fer i eliminar en funció de la variable 
 ```{r}
+summary(ifn3[is.na(ifn3$Calidad),])
+```
+S'observa que els que tenen espècie i qualitat null són arbres que es van inventariar en l'IFN2 i no s'han pogut inventariar el l'IFN3 (tenen Orden If3 = 0).
+Com que vull centrar-me només amb dades de l'IFN3 i no m'interesa comparara dades amb l'IFN2, descarto aquests valors.
 
+```{r }
+# Elimino files amb espècie i qualitat nulls
+ifn3_subset <- ifn3_subset[!is.na(ifn3_subset$Calidad),]
 ```
 
 #### 3.2. Identificació i tractament de valors extrems. 
@@ -86,7 +98,7 @@ per la variable de qualitat farem la mitjana de la província i també error est
 
 Creació de grups depen de si tenen invasores o no, en cada parcela mirar si té alguna invasora o cap i agrupar en una variable. Variable que sigui “conté invasora”.
 ```{r}
-
+ifn_par <- ifn3_subset %>% group_by(Estadillo) %>% summarise(calidad = mean(Calidad), conte_invasora = max(Is_invasive))
 ```
 
 #### 4.2. Comprovació de la normalitat i homogeneïtat de la variància. 
