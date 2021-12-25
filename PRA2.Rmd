@@ -139,15 +139,24 @@ ifn3_subset %>%
 
 
 
-
 ### 4. Anàlisi de les dades. 
 #### 4.1. Selecció dels grups de dades que es volen analitzar/comparar (planificació dels anàlisis a aplicar). 
 En primer lloc, creació de noves variables per provincia (nou dataset per provincia)
 ```{r}
 #riquesa per provincia
+Riquesa <- ifn3_subset %>%
+  group_by(Provincia) %>%
+  summarise(Riquesa = length(unique(Especie)),
+            conte_invasora = max(Is_invasive))
+#Curiositat:
+boxplot(Riquesa$Riquesa ~ Riquesa$conte_invasora)
+
 #indexs de biodiversitat per provincia
+# usar la funció diversity(), amb els arguments "simpson" i "shannon". Tenen en compte el nombre d'espècies i la seva abundància relativa.
+
+
 ```
-Indexs: Simpson, Shannon, Margalef.
+
 
 per la variable de qualitat farem la mitjana de la província i també error estàndard.
 
@@ -155,17 +164,22 @@ per la variable de qualitat farem la mitjana de la província i també error est
 Creació de grups depen de si tenen invasores o no, en cada parcela mirar si té alguna invasora o cap i agrupar en una variable. Variable que sigui “conté invasora”.
 ```{r}
 ifn_par <- ifn3_subset %>% group_by(Estadillo) %>% summarise(calidad = mean(Calidad), conte_invasora = max(Is_invasive))
+ifn_par
 ```
 
 #### 4.2. Comprovació de la normalitat i homogeneïtat de la variància. 
 comprovem normalitat:
 ```{r}
 
+# Normalitat
+# shapiro.test() 
+
 ```
 
 comprovem homogeneitat de variancies:
 ```{r}
-
+# Homocedasticitat
+# bartlett.test(VARIABLE ~ FACTOR, data = DATA)
 ```
 
 comentem resultats.
@@ -219,14 +233,10 @@ Explicar que el codi està aquí
 ### Taula de contribucions:
 
 Contribucions
-Firma
-Investigació prèvia
 
-
-Redacció de les respostes
-
-
-Desenvolupament del codi
+- Investigació prèvia: 
+- Redacció de les respostes: 
+- Desenvolupament del codi: 
 
 
 
