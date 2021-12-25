@@ -31,9 +31,10 @@ Qualitat de l’arbrat i la seva relació amb la biodiversitat,i riquesa tant na
 Explicar hipotesis i conceptes: indexs, què signifiquen les variables…
 
 ### 2. Integració i selecció de les dades d’interès a analitzar. 
-Imporem les llibreries necesaries
+Incorporem les llibreries necesaries
 ```{r}
 library(dplyr)
+library(ggplot2)
 ```
 
 Importem el csv
@@ -60,7 +61,7 @@ Comptabilitzar casos amb zeros o elements buits en valor absolut i en percentatg
 ```{r}
 colSums(is.na(ifn3_subset))
 ```
-HI ha uns quans valors nuls de qualitat. Visualizem un resum de les dades originals amb nulls a  qualitat:
+Hi ha uns quans valors nuls de qualitat. Visualizem un resum de les dades originals amb nulls a  qualitat:
 
 ```{r}
 summary(ifn3[is.na(ifn3$Calidad),])
@@ -76,12 +77,67 @@ ifn3_subset <- ifn3_subset[!is.na(ifn3_subset$Calidad),]
 #### 3.2. Identificació i tractament de valors extrems. 
 generar histogrames per a atributs numerics i frequencia de casos en categorics. 
 ```{r}
+# Gràfic de freqüències d'"Estadillo":
+ggplot(ifn3_subset, aes(x = Estadillo)) + geom_histogram(bins = 30, color = "black", fill = "gray")
+```
 
+```{r}
+# Especie
+ggplot(ifn3_subset, aes(Especie)) +
+  geom_bar(fill = "#0073C2FF")
 
+# Preparem un plot amb les 10 més abundants i amb les menys abundants
+sp_count <- ifn3_subset %>%
+  group_by(Especie) %>%
+  summarise(counts = n()) %>%
+  arrange(desc(counts))
+
+sp_top10 <- sp_count[1:10,]
+sp_last10 <- tail(sp_count,10)
+
+ggplot(data=sp_top10, aes(x=Especie, y=counts)) +  geom_bar(stat="identity") +coord_flip() + ggtitle("Top 10 espècies amb més registres")
+ggplot(data=sp_last10, aes(x=Especie, y=counts)) +  geom_bar(stat="identity") +coord_flip() + ggtitle("Top 10 espècies amb menys registres")
 
 ```
 
-Discutir què fer amb valors extrems
+Revisem "Calidad"
+```{r}
+ggplot(ifn3_subset, aes(x = Calidad)) + geom_histogram(bins = 40, color = "black", fill = "gray")
+
+#Revisem el valor màxim i mínim
+summary(ifn3_subset$Calidad)
+
+```
+Tal i com veiem en l'histograma i també en mínim i màxim, la variable Calidad pren algun valor superior a les categories establertes (entre 1 i 6), revisem quants valors hi ha superiors a 6 i els eliminem:
+```{r}
+sum(ifn3_subset$Calidad>6) # Hi ha 9 valors erronis
+
+ifn3_subset <-ifn3_subset[!c(ifn3_subset$Calidad>6),] # Els eliminem
+
+#Tornem a fer l'histograma:
+ggplot(ifn3_subset, aes(x = Calidad)) + geom_histogram(bins = 6, color = "black", fill = "gray")
+```
+
+Revisem "Provincia"
+```{r}
+ggplot(ifn3_subset, aes(x = Provincia)) + geom_histogram(bins = 40, color = "black", fill = "gray")
+summary(ifn3_subset$Provincia)
+```
+És correcte, tenim dades de 1 a 50.
+
+
+Revisem "Is_invasive":
+```{r}
+# Revisem quins valors pren Is_invasive:
+unique(ifn3_subset$Is_invasive)
+
+#Revisem quants valors hi ha de cada classe:
+ifn3_subset %>%
+  group_by(Is_invasive) %>%
+  summarise(counts = n())
+```
+
+
 
 
 ### 4. Anàlisi de les dades. 

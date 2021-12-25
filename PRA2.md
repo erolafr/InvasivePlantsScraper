@@ -21,7 +21,32 @@ Explicar hipotesis i conceptes: indexs, què signifiquen les variables…
 
 ### 2. Integració i selecció de les dades d’interès a analitzar.
 
-Importem el csv:
+Incorporem les llibreries necesaries
+
+``` r
+library(dplyr)
+```
+
+    ## Warning: package 'dplyr' was built under R version 4.0.4
+
+    ## 
+    ## Attaching package: 'dplyr'
+
+    ## The following objects are masked from 'package:stats':
+    ## 
+    ##     filter, lag
+
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     intersect, setdiff, setequal, union
+
+``` r
+library(ggplot2)
+```
+
+    ## Warning: package 'ggplot2' was built under R version 4.0.4
+
+Importem el csv
 
 ``` r
 ifn3 <- read.csv("ifn3.csv")
@@ -57,23 +82,6 @@ str(ifn3)
     ##  $ Is_invasive: chr  "No" "No" "No" "No" ...
 
 ``` r
-library(dplyr)
-```
-
-    ## Warning: package 'dplyr' was built under R version 4.0.4
-
-    ## 
-    ## Attaching package: 'dplyr'
-
-    ## The following objects are masked from 'package:stats':
-    ## 
-    ##     filter, lag
-
-    ## The following objects are masked from 'package:base':
-    ## 
-    ##     intersect, setdiff, setequal, union
-
-``` r
 # Seleccionem les variables d'interès
 ifn3_subset <- select(ifn3, c(Estadillo, Especie, Calidad, Provincia, Is_invasive))
 
@@ -102,13 +110,171 @@ colSums(is.na(ifn3_subset))
     ##   Estadillo     Especie     Calidad   Provincia Is_invasive 
     ##           0           0        2525           0           0
 
-Discutir què fer i eliminar en funció de la variable
+Hi ha uns quans valors nuls de qualitat. Visualizem un resum de les dades originals amb nulls a qualitat:
+
+``` r
+summary(ifn3[is.na(ifn3$Calidad),])
+```
+
+    ##    Estadillo        Cla              Subclase             nArbol     
+    ##  Min.   :   3   Length:2525        Length:2525        Min.   : 1.00  
+    ##  1st Qu.: 725   Class :character   Class :character   1st Qu.: 8.00  
+    ##  Median :1389   Mode  :character   Mode  :character   Median :16.00  
+    ##  Mean   :1395                                         Mean   :18.43  
+    ##  3rd Qu.:1930                                         3rd Qu.:27.00  
+    ##  Max.   :3355                                         Max.   :70.00  
+    ##                                                                      
+    ##     OrdenIf3          OrdenIf2          Rumbo          Distanci     
+    ##  Min.   :  0.000   Min.   :  0.00   Min.   :  0.0   Min.   : 0.000  
+    ##  1st Qu.:  0.000   1st Qu.:  7.00   1st Qu.:100.0   1st Qu.: 5.400  
+    ##  Median :  0.000   Median : 13.00   Median :203.0   Median : 8.600  
+    ##  Mean   :  1.147   Mean   : 16.04   Mean   :200.8   Mean   : 9.011  
+    ##  3rd Qu.:  0.000   3rd Qu.: 22.00   3rd Qu.:299.0   3rd Qu.:12.100  
+    ##  Max.   :999.000   Max.   :999.00   Max.   :399.0   Max.   :25.400  
+    ##                                     NA's   :1       NA's   :1       
+    ##    Especie               Dn1              Dn2               Ht        
+    ##  Length:2525        Min.   :   0.0   Min.   :   0.0   Min.   :0.0000  
+    ##  Class :character   1st Qu.: 261.0   1st Qu.: 260.8   1st Qu.:0.1000  
+    ##  Mode  :character   Median : 351.0   Median : 351.0   Median :0.1000  
+    ##                     Mean   : 370.8   Mean   : 370.3   Mean   :0.1163  
+    ##                     3rd Qu.: 458.0   3rd Qu.: 456.2   3rd Qu.:0.1000  
+    ##                     Max.   :1600.0   Max.   :1700.0   Max.   :6.5000  
+    ##                     NA's   :1        NA's   :1        NA's   :2       
+    ##     Calidad         Forma          ParEsp           Agente          Import    
+    ##  Min.   : NA    Min.   :2      Min.   :  41.0   Min.   :100.0   Min.   :3     
+    ##  1st Qu.: NA    1st Qu.:2      1st Qu.: 280.8   1st Qu.:100.0   1st Qu.:3     
+    ##  Median : NA    Median :2      Median : 520.5   Median :100.0   Median :3     
+    ##  Mean   :NaN    Mean   :2      Mean   : 520.5   Mean   :135.7   Mean   :3     
+    ##  3rd Qu.: NA    3rd Qu.:2      3rd Qu.: 760.2   3rd Qu.:100.0   3rd Qu.:3     
+    ##  Max.   : NA    Max.   :2      Max.   :1000.0   Max.   :421.0   Max.   :3     
+    ##  NA's   :2525   NA's   :2524   NA's   :2523     NA's   :2516    NA's   :2524  
+    ##     Elemento      Provincia     Is_invasive       
+    ##  Min.   :9      Min.   :11.00   Length:2525       
+    ##  1st Qu.:9      1st Qu.:15.00   Class :character  
+    ##  Median :9      Median :27.00   Mode  :character  
+    ##  Mean   :9      Mean   :26.71                     
+    ##  3rd Qu.:9      3rd Qu.:36.00                     
+    ##  Max.   :9      Max.   :36.00                     
+    ##  NA's   :2524
+
+S'observa que els que tenen espècie i qualitat null són arbres que es van inventariar en l'IFN2 i no s'han pogut inventariar el l'IFN3 (tenen Orden If3 = 0). Com que vull centrar-me només amb dades de l'IFN3 i no m'interesa comparara dades amb l'IFN2, descarto aquests valors.
+
+``` r
+# Elimino files amb espècie i qualitat nulls
+ifn3_subset <- ifn3_subset[!is.na(ifn3_subset$Calidad),]
+```
 
 #### 3.2. Identificació i tractament de valors extrems.
 
 generar histogrames per a atributs numerics i frequencia de casos en categorics.
 
-Discutir què fer amb valors extrems
+``` r
+# Gràfic de freqüències d'"Estadillo":
+ggplot(ifn3_subset, aes(x = Estadillo)) + geom_histogram(bins = 30, color = "black", fill = "gray")
+```
+
+![](PRA2_files/figure-markdown_github/unnamed-chunk-7-1.png)
+
+``` r
+# Especie
+ggplot(ifn3_subset, aes(Especie)) +
+  geom_bar(fill = "#0073C2FF")
+```
+
+![](PRA2_files/figure-markdown_github/unnamed-chunk-8-1.png)
+
+``` r
+# Preparem un plot amb les 10 més abundants i amb les menys abundants
+sp_count <- ifn3_subset %>%
+  group_by(Especie) %>%
+  summarise(counts = n()) %>%
+  arrange(desc(counts))
+
+sp_top10 <- sp_count[1:10,]
+sp_last10 <- tail(sp_count,10)
+
+ggplot(data=sp_top10, aes(x=Especie, y=counts)) +  geom_bar(stat="identity") +coord_flip() + ggtitle("Top 10 espècies amb més registres")
+```
+
+![](PRA2_files/figure-markdown_github/unnamed-chunk-8-2.png)
+
+``` r
+ggplot(data=sp_last10, aes(x=Especie, y=counts)) +  geom_bar(stat="identity") +coord_flip() + ggtitle("Top 10 espècies amb menys registres")
+```
+
+![](PRA2_files/figure-markdown_github/unnamed-chunk-8-3.png)
+
+Revisem "Calidad"
+
+``` r
+ggplot(ifn3_subset, aes(x = Calidad)) + geom_histogram(bins = 40, color = "black", fill = "gray")
+```
+
+![](PRA2_files/figure-markdown_github/unnamed-chunk-9-1.png)
+
+``` r
+#Revisem el valor màxim i mínim
+summary(ifn3_subset$Calidad)
+```
+
+    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    ##   1.000   2.000   2.000   2.385   3.000  33.000
+
+Tal i com veiem en l'histograma i també en mínim i màxim, la variable Calidad pren algun valor superior a les categories establertes (entre 1 i 6), revisem quants valors hi ha superiors a 6 i els eliminem:
+
+``` r
+sum(ifn3_subset$Calidad>6) # Hi ha 9 valors erronis
+```
+
+    ## [1] 9
+
+``` r
+ifn3_subset <-ifn3_subset[!c(ifn3_subset$Calidad>6),] # Els eliminem
+
+#Tornem a fer l'histograma:
+ggplot(ifn3_subset, aes(x = Calidad)) + geom_histogram(bins = 6, color = "black", fill = "gray")
+```
+
+![](PRA2_files/figure-markdown_github/unnamed-chunk-10-1.png)
+
+Revisem "Provincia"
+
+``` r
+ggplot(ifn3_subset, aes(x = Provincia)) + geom_histogram(bins = 40, color = "black", fill = "gray")
+```
+
+![](PRA2_files/figure-markdown_github/unnamed-chunk-11-1.png)
+
+``` r
+summary(ifn3_subset$Provincia)
+```
+
+    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    ##     1.0    15.0    24.0    24.3    34.0    50.0
+
+És correcte, tenim dades de 1 a 50.
+
+Revisem "Is\_invasive":
+
+``` r
+# Revisem quins valors pren Is_invasive:
+unique(ifn3_subset$Is_invasive)
+```
+
+    ## [1] "No"  "Yes"
+
+``` r
+#Revisem quants valors hi ha de cada classe:
+ifn3_subset %>%
+  group_by(Is_invasive) %>%
+  summarise(counts = n())
+```
+
+    ## # A tibble: 2 x 2
+    ##   Is_invasive  counts
+    ##   <chr>         <int>
+    ## 1 No          1261334
+    ## 2 Yes             402
 
 ### 4. Anàlisi de les dades.
 
@@ -126,6 +292,10 @@ Indexs: Simpson, Shannon, Margalef.
 per la variable de qualitat farem la mitjana de la província i també error estàndard.
 
 Creació de grups depen de si tenen invasores o no, en cada parcela mirar si té alguna invasora o cap i agrupar en una variable. Variable que sigui “conté invasora”.
+
+``` r
+ifn_par <- ifn3_subset %>% group_by(Estadillo) %>% summarise(calidad = mean(Calidad), conte_invasora = max(Is_invasive))
+```
 
 #### 4.2. Comprovació de la normalitat i homogeneïtat de la variància.
 
