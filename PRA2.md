@@ -284,10 +284,20 @@ En primer lloc, creació de noves variables per provincia (nou dataset per provi
 
 ``` r
 #riquesa per provincia
-#indexs de biodiversitat per provincia
+Riquesa <- ifn3_subset %>%
+  group_by(Provincia) %>%
+  summarise(Riquesa = length(unique(Especie)),
+            conte_invasora = max(Is_invasive))
+#Curiositat:
+boxplot(Riquesa$Riquesa ~ Riquesa$conte_invasora)
 ```
 
-Indexs: Simpson, Shannon, Margalef.
+![](PRA2_files/figure-markdown_github/unnamed-chunk-13-1.png)
+
+``` r
+#indexs de biodiversitat per provincia
+# usar la funció diversity(), amb els arguments "simpson" i "shannon". Tenen en compte el nombre d'espècies i la seva abundància relativa.
+```
 
 per la variable de qualitat farem la mitjana de la província i també error estàndard.
 
@@ -295,13 +305,39 @@ Creació de grups depen de si tenen invasores o no, en cada parcela mirar si té
 
 ``` r
 ifn_par <- ifn3_subset %>% group_by(Estadillo) %>% summarise(calidad = mean(Calidad), conte_invasora = max(Is_invasive))
+ifn_par
 ```
+
+    ## # A tibble: 4,029 x 3
+    ##    Estadillo calidad conte_invasora
+    ##        <int>   <dbl> <chr>         
+    ##  1         1    2.44 No            
+    ##  2         2    2.48 No            
+    ##  3         3    2.41 No            
+    ##  4         4    2.36 No            
+    ##  5         5    2.42 No            
+    ##  6         6    2.38 No            
+    ##  7         7    2.34 No            
+    ##  8         8    2.38 No            
+    ##  9         9    2.27 No            
+    ## 10        10    2.33 No            
+    ## # ... with 4,019 more rows
 
 #### 4.2. Comprovació de la normalitat i homogeneïtat de la variància.
 
 comprovem normalitat:
 
+``` r
+# Normalitat
+# shapiro.test() 
+```
+
 comprovem homogeneitat de variancies:
+
+``` r
+# Homocedasticitat
+# bartlett.test(VARIABLE ~ FACTOR, data = DATA)
+```
 
 comentem resultats.
 
@@ -333,8 +369,8 @@ Explicar que el codi està aquí
 
 ### Taula de contribucions:
 
-Contribucions Firma Investigació prèvia
+Contribucions
 
-Redacció de les respostes
-
-Desenvolupament del codi
+-   Investigació prèvia:
+-   Redacció de les respostes:
+-   Desenvolupament del codi:
