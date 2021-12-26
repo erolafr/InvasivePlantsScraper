@@ -15,7 +15,7 @@ descripció dataset perquè és important
 
 Tal i com presentavem en la PRA1 (<https://github.com/erolafr/InvasivePlantsScraper/blob/main/Mem%C3%B2riaPRA1.pdf>), el dataset “Biodiversitat arbustiva i arbòria nativa i invasora a Espanya”.
 
-Preguntes: Biodiversitat i riquesa nativa i invasora en les diferents regions. Rànquing de províncies amb més diversitats i riquesa. Correlació entre biodiversitat i riquesa nativa i invasora. Qualitat de l’arbrat i la seva relació amb la biodiversitat,i riquesa tant nativa com invasora.
+Preguntes: Riquesa nativa i invasora en les diferents regions. Rànquing de províncies amb més riquesa d'espècies. Correlació entre riquesa nativa i invasora. Qualitat de l’arbrat i la seva relació amb la biodiversitat,i riquesa tant nativa com invasora.
 
 Explicar hipotesis i conceptes: indexs, què signifiquen les variables…
 
@@ -282,72 +282,207 @@ ifn3_subset %>%
 
 En primer lloc, creació de noves variables per provincia (nou dataset per provincia)
 
-``` r
-#riquesa per provincia
-Riquesa <- ifn3_subset %>%
-  group_by(Provincia) %>%
-  summarise(Riquesa = length(unique(Especie)),
-            conte_invasora = max(Is_invasive))
-#Curiositat:
-boxplot(Riquesa$Riquesa ~ Riquesa$conte_invasora)
-```
-
-![](PRA2_files/figure-markdown_github/unnamed-chunk-13-1.png)
+Creació de grups depen de si tenen invasores o no, en cada parcela mirar si té alguna invasora o cap i agrupar en una variable. Variable que sigui “conté invasora”. Creem la mitjana i desviació estàndard de la qualitat dels arbres en la parcela per a resoldre les preguntes plantejades i tenir noció també de la variabilitat el l'atribut de la qualitat.
 
 ``` r
-#indexs de biodiversitat per provincia
-# usar la funció diversity(), amb els arguments "simpson" i "shannon". Tenen en compte el nombre d'espècies i la seva abundància relativa.
-```
-
-per la variable de qualitat farem la mitjana de la província i també error estàndard.
-
-Creació de grups depen de si tenen invasores o no, en cada parcela mirar si té alguna invasora o cap i agrupar en una variable. Variable que sigui “conté invasora”.
-
-``` r
-ifn_par <- ifn3_subset %>% group_by(Estadillo) %>% summarise(calidad = mean(Calidad), conte_invasora = max(Is_invasive))
+ifn_par <- ifn3_subset %>% group_by(Estadillo) %>% summarise(calidad = mean(Calidad), calidad_sd=sd(Calidad), conte_invasora = max(Is_invasive))
 ifn_par
 ```
 
-    ## # A tibble: 4,029 x 3
-    ##    Estadillo calidad conte_invasora
-    ##        <int>   <dbl> <chr>         
-    ##  1         1    2.44 No            
-    ##  2         2    2.48 No            
-    ##  3         3    2.41 No            
-    ##  4         4    2.36 No            
-    ##  5         5    2.42 No            
-    ##  6         6    2.38 No            
-    ##  7         7    2.34 No            
-    ##  8         8    2.38 No            
-    ##  9         9    2.27 No            
-    ## 10        10    2.33 No            
+    ## # A tibble: 4,029 x 4
+    ##    Estadillo calidad calidad_sd conte_invasora
+    ##        <int>   <dbl>      <dbl> <chr>         
+    ##  1         1    2.44      0.920 No            
+    ##  2         2    2.48      0.987 No            
+    ##  3         3    2.41      0.839 No            
+    ##  4         4    2.36      0.816 No            
+    ##  5         5    2.42      0.855 No            
+    ##  6         6    2.38      0.835 No            
+    ##  7         7    2.34      0.768 No            
+    ##  8         8    2.38      0.823 No            
+    ##  9         9    2.27      0.735 No            
+    ## 10        10    2.33      0.801 No            
     ## # ... with 4,019 more rows
+
+A més creem també la riquesa d'espècies total i d'invasores per parcela. Incorporem tambñe en aquest dataset el valor de la província.
+
+``` r
+ifn_par <- ifn3_subset %>% group_by(Estadillo) %>% summarise(calidad = mean(Calidad), calidad_sd=sd(Calidad), conte_invasora = max(Is_invasive), riquesa_total = length(unique(Especie)), riquesa_invasores = sum(Is_invasive=="Yes"), provincia = max(Provincia))
+
+head(ifn_par)
+```
+
+    ## # A tibble: 6 x 7
+    ##   Estadillo calidad calidad_sd conte_invasora riquesa_total riquesa_invasores
+    ##       <int>   <dbl>      <dbl> <chr>                  <int>             <int>
+    ## 1         1    2.44      0.920 No                        18                 0
+    ## 2         2    2.48      0.987 No                        27                 0
+    ## 3         3    2.41      0.839 No                        19                 0
+    ## 4         4    2.36      0.816 No                        24                 0
+    ## 5         5    2.42      0.855 No                        28                 0
+    ## 6         6    2.38      0.835 No                        31                 0
+    ## # ... with 1 more variable: provincia <int>
+
+``` r
+dim(ifn_par)
+```
+
+    ## [1] 4029    7
+
+``` r
+hist(ifn_par$calidad) #Visualitzem els valors que pren la calidad
+```
+
+![](PRA2_files/figure-markdown_github/unnamed-chunk-14-1.png)
+
+``` r
+hist(ifn_par$riquesa_total) # Visualitzem els valors que pren la riquesa total d'espècies
+```
+
+![](PRA2_files/figure-markdown_github/unnamed-chunk-14-2.png)
+
+``` r
+hist(ifn_par$riquesa_invasores) # Visualitzem els valors que pren la riquesa d'invasores
+```
+
+![](PRA2_files/figure-markdown_github/unnamed-chunk-14-3.png)
 
 #### 4.2. Comprovació de la normalitat i homogeneïtat de la variància.
 
-comprovem normalitat:
+Comprovem normalitat de les variables d'interès
 
 ``` r
-# Normalitat
-# shapiro.test() 
+shapiro.test(ifn_par$calidad) 
 ```
+
+    ## 
+    ##  Shapiro-Wilk normality test
+    ## 
+    ## data:  ifn_par$calidad
+    ## W = 0.71361, p-value < 2.2e-16
+
+``` r
+shapiro.test(ifn_par$riquesa_total) 
+```
+
+    ## 
+    ##  Shapiro-Wilk normality test
+    ## 
+    ## data:  ifn_par$riquesa_total
+    ## W = 0.96365, p-value < 2.2e-16
 
 comprovem homogeneitat de variancies:
 
 ``` r
-# Homocedasticitat
-# bartlett.test(VARIABLE ~ FACTOR, data = DATA)
+bartlett.test(calidad ~ conte_invasora, data = ifn_par)
 ```
 
-comentem resultats.
+    ## 
+    ##  Bartlett test of homogeneity of variances
+    ## 
+    ## data:  calidad by conte_invasora
+    ## Bartlett's K-squared = 29.2, df = 1, p-value = 6.529e-08
+
+``` r
+bartlett.test(riquesa_total ~ conte_invasora, data = ifn_par)
+```
+
+    ## 
+    ##  Bartlett test of homogeneity of variances
+    ## 
+    ## data:  riquesa_total by conte_invasora
+    ## Bartlett's K-squared = 24.711, df = 1, p-value = 6.66e-07
+
+PENDENT: comentem resultats. No hi ha normalitat però són més de 30 mostres. Segons el teorema central del limit podriem acceptar normalitat. Com procedim?
 
 #### 4.3. Aplicació de proves estadístiques per comparar els grups de dades. En funció de les dades i de l’objectiu de l’estudi, aplicar proves de contrast d’hipòtesis, correlacions, regressions, etc. Aplicar almenys tres mètodes d’anàlisi diferents.
 
 Contrast d’hipotesis de si les parceles amb alguna invasora tenen millor qualitat o menys biodiversitat que les que no.
 
-Correlació entre biodiversitat nativa de la provincia i la biodiversitat invasora de la provincia
+``` r
+# Visualitzem en primer lloc:
+boxplot(ifn_par$riquesa_total ~ ifn_par$conte_invasora)
+```
+
+![](PRA2_files/figure-markdown_github/unnamed-chunk-17-1.png)
+
+``` r
+boxplot(ifn_par$calidad ~ ifn_par$conte_invasora)
+```
+
+![](PRA2_files/figure-markdown_github/unnamed-chunk-17-2.png)
+
+Correlació entre biodiversitat nativa i la biodiversitat invasora
+
+``` r
+fit1 <- lm(riquesa_total ~ riquesa_invasores, data =ifn_par)
+summary(fit1)
+```
+
+    ## 
+    ## Call:
+    ## lm(formula = riquesa_total ~ riquesa_invasores, data = ifn_par)
+    ## 
+    ## Residuals:
+    ##     Min      1Q  Median      3Q     Max 
+    ## -14.132  -7.132   0.868   6.868  19.868 
+    ## 
+    ## Coefficients:
+    ##                   Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept)       15.13202    0.13174 114.867  < 2e-16 ***
+    ## riquesa_invasores  0.39078    0.08734   4.474 7.88e-06 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Residual standard error: 8.343 on 4027 degrees of freedom
+    ## Multiple R-squared:  0.004947,   Adjusted R-squared:  0.0047 
+    ## F-statistic: 20.02 on 1 and 4027 DF,  p-value: 7.877e-06
+
+``` r
+ggplot(ifn_par, aes(x = riquesa_total, y = riquesa_invasores)) + 
+  geom_point() +
+  stat_smooth(method = "lm", col = "red")
+```
+
+    ## `geom_smooth()` using formula 'y ~ x'
+
+![](PRA2_files/figure-markdown_github/unnamed-chunk-18-1.png) PENDENT: Comentar resultat.
 
 Correlació entre biodiversitat invasora i qualitat de l’arbrat
+
+``` r
+fit1 <- lm(calidad ~ riquesa_invasores, data =ifn_par)
+summary(fit1)
+```
+
+    ## 
+    ## Call:
+    ## lm(formula = calidad ~ riquesa_invasores, data = ifn_par)
+    ## 
+    ## Residuals:
+    ##     Min      1Q  Median      3Q     Max 
+    ## -0.4164 -0.1180 -0.0285  0.0712  3.6121 
+    ## 
+    ## Coefficients:
+    ##                   Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept)       2.387852   0.004066 587.230   <2e-16 ***
+    ## riquesa_invasores 0.001932   0.002696   0.717    0.474    
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Residual standard error: 0.2575 on 4027 degrees of freedom
+    ## Multiple R-squared:  0.0001276,  Adjusted R-squared:  -0.0001207 
+    ## F-statistic: 0.5138 on 1 and 4027 DF,  p-value: 0.4735
+
+``` r
+ggplot(ifn_par, aes(x = calidad, y = riquesa_invasores)) + 
+  geom_point() +
+  stat_smooth(method = "lm", col = "red")
+```
+
+    ## `geom_smooth()` using formula 'y ~ x'
+
+![](PRA2_files/figure-markdown_github/unnamed-chunk-19-1.png)
 
 ### 5. Representació dels resultats a partir de taules i gràfiques.
 

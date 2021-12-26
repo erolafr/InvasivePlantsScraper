@@ -23,9 +23,9 @@ perquè és important
 Tal i com presentavem en la PRA1 (https://github.com/erolafr/InvasivePlantsScraper/blob/main/Mem%C3%B2riaPRA1.pdf), el dataset “Biodiversitat arbustiva i arbòria nativa i invasora a Espanya”. 
 
 Preguntes:
-Biodiversitat i riquesa nativa i invasora en les diferents regions.
-Rànquing de províncies amb  més diversitats i riquesa.
-Correlació entre biodiversitat i riquesa nativa i invasora.
+Riquesa nativa i invasora en les diferents regions.
+Rànquing de províncies amb  més riquesa d'espècies.
+Correlació entre riquesa nativa i invasora.
 Qualitat de l’arbrat i la seva relació amb la biodiversitat,i riquesa tant nativa com invasora.
 
 Explicar hipotesis i conceptes: indexs, què signifiquen les variables…
@@ -142,62 +142,70 @@ ifn3_subset %>%
 ### 4. Anàlisi de les dades. 
 #### 4.1. Selecció dels grups de dades que es volen analitzar/comparar (planificació dels anàlisis a aplicar). 
 En primer lloc, creació de noves variables per provincia (nou dataset per provincia)
+
+Creació de grups depen de si tenen invasores o no, en cada parcela mirar si té alguna invasora o cap i agrupar en una variable. Variable que sigui “conté invasora”. Creem la mitjana i desviació estàndard de la qualitat dels arbres en la parcela per a resoldre les preguntes plantejades i tenir noció també de la variabilitat el l'atribut de la qualitat.
 ```{r}
-#riquesa per provincia
-Riquesa <- ifn3_subset %>%
-  group_by(Provincia) %>%
-  summarise(Riquesa = length(unique(Especie)),
-            conte_invasora = max(Is_invasive))
-#Curiositat:
-boxplot(Riquesa$Riquesa ~ Riquesa$conte_invasora)
-
-#indexs de biodiversitat per provincia
-# usar la funció diversity(), amb els arguments "simpson" i "shannon". Tenen en compte el nombre d'espècies i la seva abundància relativa.
-
-
-```
-
-
-per la variable de qualitat farem la mitjana de la província i també error estàndard.
-
-
-Creació de grups depen de si tenen invasores o no, en cada parcela mirar si té alguna invasora o cap i agrupar en una variable. Variable que sigui “conté invasora”.
-```{r}
-ifn_par <- ifn3_subset %>% group_by(Estadillo) %>% summarise(calidad = mean(Calidad), conte_invasora = max(Is_invasive))
+ifn_par <- ifn3_subset %>% group_by(Estadillo) %>% summarise(calidad = mean(Calidad), calidad_sd=sd(Calidad), conte_invasora = max(Is_invasive))
 ifn_par
 ```
 
-#### 4.2. Comprovació de la normalitat i homogeneïtat de la variància. 
-comprovem normalitat:
+A més creem també la riquesa d'espècies total i d'invasores per parcela. Incorporem tambñe en aquest dataset el valor de la província.
 ```{r}
+ifn_par <- ifn3_subset %>% group_by(Estadillo) %>% summarise(calidad = mean(Calidad), calidad_sd=sd(Calidad), conte_invasora = max(Is_invasive), riquesa_total = length(unique(Especie)), riquesa_invasores = sum(Is_invasive=="Yes"), provincia = max(Provincia))
 
-# Normalitat
-# shapiro.test() 
+head(ifn_par)
+dim(ifn_par)
+hist(ifn_par$calidad) #Visualitzem els valors que pren la calidad
+hist(ifn_par$riquesa_total) # Visualitzem els valors que pren la riquesa total d'espècies
+hist(ifn_par$riquesa_invasores) # Visualitzem els valors que pren la riquesa d'invasores
+```
 
+#### 4.2. Comprovació de la normalitat i homogeneïtat de la variància. 
+Comprovem normalitat de les variables d'interès
+```{r}
+shapiro.test(ifn_par$calidad) 
+shapiro.test(ifn_par$riquesa_total) 
 ```
 
 comprovem homogeneitat de variancies:
 ```{r}
-# Homocedasticitat
-# bartlett.test(VARIABLE ~ FACTOR, data = DATA)
+bartlett.test(calidad ~ conte_invasora, data = ifn_par)
+bartlett.test(riquesa_total ~ conte_invasora, data = ifn_par)
 ```
 
-comentem resultats.
+PENDENT: comentem resultats. No hi ha normalitat però són més de 30 mostres. Segons el teorema central del limit podriem acceptar normalitat. Com procedim? 
+
 
 #### 4.3. Aplicació de proves estadístiques per comparar els grups de dades. En funció de les dades i de l’objectiu de l’estudi, aplicar proves de contrast d’hipòtesis, correlacions, regressions, etc. Aplicar almenys tres mètodes d’anàlisi diferents. 
 
 Contrast d’hipotesis de si les parceles amb alguna invasora tenen millor qualitat o menys biodiversitat que les que no.
 ```{r}
+# Visualitzem en primer lloc:
+boxplot(ifn_par$riquesa_total ~ ifn_par$conte_invasora)
+boxplot(ifn_par$calidad ~ ifn_par$conte_invasora)
 
 ```
 
-Correlació entre biodiversitat nativa de la provincia i la biodiversitat invasora de la provincia
+Correlació entre biodiversitat nativa i la biodiversitat invasora 
 ```{r}
+fit1 <- lm(riquesa_total ~ riquesa_invasores, data =ifn_par)
+summary(fit1)
+
+ggplot(ifn_par, aes(x = riquesa_total, y = riquesa_invasores)) + 
+  geom_point() +
+  stat_smooth(method = "lm", col = "red")
 
 ```
+PENDENT: Comentar resultat.
 
 Correlació entre biodiversitat invasora i qualitat de l’arbrat
 ```{r}
+fit1 <- lm(calidad ~ riquesa_invasores, data =ifn_par)
+summary(fit1)
+
+ggplot(ifn_par, aes(x = calidad, y = riquesa_invasores)) + 
+  geom_point() +
+  stat_smooth(method = "lm", col = "red")
 
 ```
 
