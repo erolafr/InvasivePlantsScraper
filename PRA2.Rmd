@@ -228,8 +228,18 @@ top_r_invasores
 
 taula anova, p-valors del contrast d’hipotesi
 ```{r}
-
+# Calcul de l'ANOVA per qualitat i riquesa total
+anova <- aov(ifn_prov$calidad ~ ifn_prov$riquesa_total)
+summary(anova)
 ```
+
+El p-value és molt superior a 0,05, per tant no podem acceptar la hipotesis alternativa que la riquesa total es significativa de la qualitat.
+```{r}
+# Calcul de l'ANOVA per qualitat i si la província conté invasores
+anova <- aov(ifn_prov$calidad ~ ifn_prov$conte_invasora)
+summary(anova)
+```
+El p-value és molt superior a 0,05, per tant no podem acceptar la hipotesis alternativa que la riquesa total es significativa de la qualitat.
 
 grafics de correlacions
 ```{r}
