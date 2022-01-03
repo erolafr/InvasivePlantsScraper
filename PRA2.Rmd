@@ -22,11 +22,12 @@ només comptabilitzar el nombre d’espècies d’arbres i arbusts presents a Es
 sinó també realitzar anàlisis de la seva distribució territorial i per tant permetent
 l’ajust de polítiques de conservació i gestió de la biodiversitat adaptades a cada
 regió.
-Són diverses les preguntes que esperen respondre amb el seu analisis:
-- Quina és la iquesa nativa i invasora en les diferents regions.
-- Hi ha correlació entre riquesa nativa i invasora.
-- Hi ha correlació entre la qualitat de l'arbrat i la biodiversitat tant nativa com invasora.
-- Hi ha correlació entre la qualitat de l'arbrat i la riquesa tant nativa com invasora
+
+Són diverses les preguntes que esperem respondre amb el seu anàlisis, juntament amb les hipòtesis de partida:
+
+1.  Quina és la riquesa nativa (nombre d'espècies totals) i invasora en les diferents regions? *H1*: Hi ha diverses hipòtesis amb suport empíric divers que sustenten que a major --> EXPLICA RESISTENCIA BITICA.
+2. Hi ha correlació entre riquesa nativa i invasora?
+3. Hi ha correlació entre la qualitat de l'arbrat i la riquesa nativa? i invasora?
 -Quines són les de províncies amb  més riquesa d'espècies.
 
 
@@ -147,7 +148,7 @@ En primer lloc, creació de noves variables per provincia (nou dataset per provi
 
 Creació de grups depen de si tenen invasores o no, en cada parcela mirar si té alguna invasora o cap i agrupar en una variable. Variable que sigui “conté invasora”. Creem la mitjana i desviació estàndard de la qualitat dels arbres en la parcela per a resoldre les preguntes plantejades i tenir noció també de la variabilitat el l'atribut de la qualitat.
 
-A més creem també la riquesa d'espècies total i d'invasores per parcela. Incorporem tambñe en aquest dataset el valor de la província.
+A més creem també la riquesa d'espècies total i d'invasores per parcela. Incorporem també en aquest dataset el valor de la província.
 ```{r}
 ifn_par <- ifn3_subset %>% group_by(Estadillo) %>% summarise(calidad = mean(Calidad), calidad_sd=sd(Calidad), conte_invasora = max(Is_invasive), riquesa_total = length(unique(Especie)), riquesa_invasores = sum(Is_invasive=="Yes"), provincia = max(Provincia))
 
@@ -211,7 +212,8 @@ ggplot(ifn_par, aes(x = calidad, y = riquesa_invasores)) +
 ### 5. Representació dels resultats a partir de taules i gràfiques. 
 resultats de riquesa i biodiversitat per provincia
 ```{r}
-ifn_prov <- ifn_par %>% group_by(provincia) %>% summarise(calidad = mean(calidad), conte_invasora = max(conte_invasora), riquesa_total = mean(riquesa_total), riquesa_invasores = mean(riquesa_invasores)) %>% 
+ifn_prov <- ifn_par %>% group_by(provincia) %>% summarise(calidad = mean(calidad), conte_invasora = max(conte_invasora), riquesa_total = mean(riquesa_total), riquesa_invasores = mean(riquesa_invasores)) 
+
 
 ```
 
