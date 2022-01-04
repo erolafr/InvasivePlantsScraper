@@ -33,6 +33,9 @@ Incorporem les llibreries necesaries
 ```{r}
 library(dplyr)
 library(ggplot2)
+library("sp")
+library(raster)
+library(RColorBrewer)
 ```
 
 Importem el csv
@@ -155,9 +158,15 @@ hist(ifn_par$riquesa_invasores) # Visualitzem els valors que pren la riquesa d'i
 ```
 
 Un cop tenim les dades que ens interessen a nivell de parcel·la, les calculem a nivell de provincia
-
 ```{r}
 ifn_prov <- ifn_par %>% group_by(provincia) %>% summarise(calidad = mean(calidad), conte_invasora = max(conte_invasora), riquesa_total = mean(riquesa_total), riquesa_invasores = mean(riquesa_invasores))
+
+# Obtenim les regions administratives, les provincies d'espanya
+spain<- getData('GADM', country='ESP', level=2) 
+# Afegim els noms de les províncies
+codi_provincies <- read.csv(file = 'codi_provincies.csv', sep = ";") 
+ifn_prov$CODE <- ifn_prov$provincia # canviem el nom per a poder fer merge
+ifn_prov <- merge(ifn_prov, codi_provincies, by="CODE") # obtenim els noms de les províncies
 
 # Exportem les dades
 write.csv(ifn_prov, "ifn_prov.csv")
@@ -231,6 +240,21 @@ summary(anova)
 El p-value és molt superior a 0,05, per tant no podem acceptar la hipotesis alternativa que la riquesa total es significativa de la qualitat.
 
 ### 5. Representació dels resultats a partir de taules i gràfiques. 
+# Mapes de riquesa i qualitat per província
+ordre_mapa <- ifn_prov1[match(as.factor(spain$NAME_2), ifn_prov1$NAME_2), ]
+
+datcol <- rbPal(10)[as.numeric(cut(ordre_mapa$riquesa_invasores,breaks = 10))]
+plot(spain, col=datcol, main = "Riquesa espècies invasores mitjana per parcel·la")
+legend('topright', legend=c(round(min(ordre_mapa$riquesa_invasores, na.rm=TRUE),2), round(max(ordre_mapa$riquesa_invasores, na.rm=TRUE),2)), col=colorsllegenda, pch=16)
+
+datcol <- rbPal(10)[as.numeric(cut(ordre_mapa$riquesa_total,breaks = 10))]
+plot(spain, col=datcol, main = "Riquesa total mitjana per parcel·la")
+legend('topright', legend=c(round(min(ordre_mapa$riquesa_total, na.rm=TRUE),2), round(max(ordre_mapa$riquesa_total, na.rm=TRUE),2)), col=colorsllegenda, pch=16)
+
+datcol <- rbPal(10)[as.numeric(cut(ordre_mapa$calidad,breaks = 10))]
+plot(spain, col=datcol, main = "Qualitat arbrat mitjà per parcel·la")
+legend('topright', legend=c(round(min(ordre_mapa$calidad, na.rm=TRUE),2), round(max(ordre_mapa$calidad, na.rm=TRUE),2)), col=colorsllegenda, pch=16)
+
 ```{r}
 # Rànquing 10 provincies en riquesa total
 top_r_total <- ifn_prov %>%filter(rank(desc(riquesa_total))<=10)
