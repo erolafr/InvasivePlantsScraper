@@ -12,24 +12,21 @@ knitr::opts_chunk$set(echo = TRUE)
 # MEMÒRIA PRA2
 
 ### 0. Introducció
-Aquest arxiu conté els apartats de la memòria de la **PRA2** juntament amb el codi per a respondre a les preguntes. Per tant el punt 7 de la memòria queda integrat en aquest mateix arxiu.
+Aquest arxiu conté els apartats de la memòria de la *PRA2* juntament amb el codi per a respondre a les preguntes. Per tant el punt 7 de la memòria queda integrat en aquest mateix arxiu.
 
 
 ### 1. Descripció del dataset. Perquè és important i quina pregunta/problema pretén respondre? 
-El conjunt de dades generat és d’interès principalment per a gestors en relació a la conservació de la biodiversitat a nivell nacional. El conjunt de dades permet no només comptabilitzar el nombre d’espècies d’arbres i arbusts presents a Espanya sinó també realitzar anàlisis de la seva distribució territorial i per tant permetent l’ajust de polítiques de conservació i gestió de la biodiversitat adaptades a cada regió.
+El conjunt de dades generat en la PRA1 (https://github.com/erolafr/InvasivePlantsScraper/blob/main/Mem%C3%B2riaPRA1.pdf), que rep el nom de “Biodiversitat arbustiva i arbòria nativa i invasora a Espanya” i que serà analitzat en aquesta PRA2, és d’interès principalment per a gestors en relació a la conservació de la biodiversitat a nivell nacional. El conjunt de dades permet no només comptabilitzar el nombre d’espècies d’arbres i arbusts presents a Espanya sinó també realitzar anàlisis de la seva distribució territorial i per tant permetent l’ajust de polítiques de conservació i gestió de la biodiversitat adaptades a cada regió.
 
 Són diverses les preguntes que esperem respondre amb el seu anàlisis, juntament amb les hipòtesis de partida:
 
-1.  Quina és la riquesa nativa (nombre d'espècies totals) i invasora en les diferents regions? *H1*: Esperem que hi hagi heterogeneïtat en la riquesa d'espècies al territori, trobant una major riquesa nativa a les provícies amb reserves naturals per exemple, i major nombre d'espècies invasores a les províncies costaneres i ciutat més grans, degut a la seva major connectivitat.
+1.  Quina és la *riquesa* nativa (nombre d'espècies totals) i invasora en les diferents *regions? *H1: Esperem que hi hagi heterogeneïtat en la riquesa d'espècies al territori, trobant una major riquesa nativa a les províncies amb reserves naturals per exemple, i major nombre d'espècies invasores a les províncies costaneres i ciutat més grans, degut a la seva major connectivitat.
 
-2. 
--Quines són les de províncies amb  més riquesa d'espècies. CAL REDATA i ihspoteiR
+2. Quines són les *10 províncies amb major riquesa d'espècies? *H2: en la línia de la hipòtesi H1 esperem que les 10 províncies amb major riquesa d’espècies siguin aquelles que contenen reserves naturals. 
 
-2. Hi ha correlació entre riquesa nativa i invasora? *H2*: Hi ha diverses hipòtesis amb suport empíric divers que sustenten que a major biodiversitat d'espècies, és més probable que hi hagi un menor nombre d'espècies invasores. Aquesta és la hipòtesi de la Resistència Biòtica (Enders et al., 2020). Així doncs esperem una correlació negativa entre la biodiversitat total d'una regió i el nombre d'espècies invasores. 
+3. Hi ha *correlació entre riquesa nativa i invasora? *H3: Hi ha diverses hipòtesis amb suport empíric divers que sustenten que a major biodiversitat d'espècies, és més probable que hi hagi un menor nombre d'espècies invasores. Aquesta és la hipòtesi de la Resistència Biòtica (Enders et al., 2020). Així doncs esperem una correlació negativa entre la biodiversitat total d'una regió i el nombre d'espècies invasores. 
 
-3. Hi ha correlació entre la qualitat de l'arbrat i la riquesa nativa? i invasora? *H3*: FALTA
-
-
+4. Hi ha correlació entre la *qualitat de l'arbrat* i la *riquesa* nativa? i invasora? H4: Esperem que hi hagi una correlació positiva entre la qualitat mitjana de la parcel·la i la riquesa d’espècies, assumint que els boscos amb major nombre d’espècies tenen també més qualitat. Respecte el nombre d’espècies invasores, podríem esperar que aquelles parcel·les amb espècies invasores tinguin una qualitat de l’arbrat inferior.
 
 ### 2. Integració i selecció de les dades d’interès a analitzar. 
 Incorporem les llibreries necesaries
