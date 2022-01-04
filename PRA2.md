@@ -1,6 +1,6 @@
 PRA2
 ================
-Erola Fenollosa i Xavier Pasquet
+Erola Fenollosa i Xavier Pascuet
 22 desembre de 2021
 
 # MEMÒRIA PRA2
@@ -633,16 +633,22 @@ top_r_invasores
 
 ### 6. Resolució del problema. A partir dels resultats obtinguts, quines són les conclusions? Els resultats permeten respondre al problema?
 
-Conclusions. Redactar.
+-   **1.** Tal i com s'observa en el mapa de riquesa total mitjana per província s'observa que hi ha heterogeneitat en la distribució geogràfica, amb valors que van des de 1,64 fins a 23,52. No s'obeserva cap patrò aparent respecte a latitut i proximitat de la costa. Tal i com s'observa en el mapa de riquesa despècies invasora mitjana per província s'observa que hi ha molt poca presència d'elles i que en cap provincia el seu valor arriva a la unitat. En el mapa de qualitat de l'arbrat per províncies, s'observa que la meitat nord del pais té una qualitat d'arbrat major, trobant-se els seus màxims en rovíncies pirinenques.
 
-### 7. Codi: Cal adjuntar el codi, preferiblement en R, amb el que s’ha realitzat la neteja, anàlisi i representació de les dades. Si ho preferiu, també podeu treballar en Python
+-   **2.** Les 10 províncies en major riquesa d'especies són: Asturias, Cantabria, Sevilla, Tarragona, Teurel, Toledo, Valladolid, Bizcaia, Zamora i Zaragoza. Les 3 províncies amb més riquesa d'invasores són: Bizcaia, Valladolid i Zaragoza.
 
-Explicar que el codi està aquí
+-   **3.** No hi ha correlació entre riquesa nativa i invasora, per tant a major riquesa nativa no implica una menor riquesa invasora. En l'Anova d'un factor que hem calculat, les parceles que conten alguna invasora no tenen menor biodiversitat.
+
+-   **4.** No hi ha correlació entre la *qualitat de l'arbrat* i la *riquesa* nativa ni entre la qualitat i la presència d'invasora? Per tant no hi ha relació entre la qualitat dels arbres i la riquesa d'espècies en la parcel·la.
+
+### 7. Codi
+
+El codi es troba en el present arxiu.
 
 ### Taula de contribucions:
 
-Contribucions
+Contribucions (en ordre alfabètic)
 
--   Investigació prèvia:
--   Redacció de les respostes:
--   Desenvolupament del codi:
+-   Investigació prèvia: EF, XP
+-   Redacció de les respostes: EF, XP
+-   Desenvolupament del codi: EF, XP
