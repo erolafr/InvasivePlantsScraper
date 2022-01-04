@@ -276,8 +276,9 @@ top_r_invasores
 ### 6. Resolució del problema. A partir dels resultats obtinguts, quines són les conclusions? Els resultats permeten respondre al problema?
 Conclusions. Redactar.
 
-### 7. Codi: Cal adjuntar el codi, preferiblement en R, amb el que s’ha realitzat la El codi es troba en el present arxiu.
+- 
 
+### 7. Codi: Cal adjuntar el codi, preferiblement en R, amb el que s’ha realitzat la El codi es troba en el present arxiu.
 
 ### Taula de contribucions:
 
