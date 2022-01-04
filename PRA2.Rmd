@@ -36,6 +36,7 @@ library(ggplot2)
 library("sp")
 library(raster)
 library(RColorBrewer)
+
 ```
 
 Importem el csv
@@ -50,7 +51,7 @@ str(ifn3)
 
 
 # Seleccionem les variables d'interès
-ifn3_subset <- select(ifn3, c(Estadillo, Especie, Calidad, Provincia, Is_invasive))
+ifn3_subset <- dplyr::select(ifn3, c(Estadillo, Especie, Calidad, Provincia, Is_invasive))
 
 # Visualitzem el dataset filtrat:
 head(ifn3_subset)
@@ -240,8 +241,13 @@ summary(anova)
 El p-value és molt superior a 0,05, per tant no podem acceptar la hipotesis alternativa que la riquesa total es significativa de la qualitat.
 
 ### 5. Representació dels resultats a partir de taules i gràfiques. 
-# Mapes de riquesa i qualitat per província
-ordre_mapa <- ifn_prov1[match(as.factor(spain$NAME_2), ifn_prov1$NAME_2), ]
+
+Mapes de riquesa i qualitat per província
+```{r}
+ordre_mapa <- ifn_prov[match(as.factor(spain$NAME_2), ifn_prov$NAME_2), ]
+
+rbPal <- colorRampPalette(c('#f0f9e8','firebrick1'))
+colorsllegenda<- c("#f0f9e8","firebrick1")
 
 datcol <- rbPal(10)[as.numeric(cut(ordre_mapa$riquesa_invasores,breaks = 10))]
 plot(spain, col=datcol, main = "Riquesa espècies invasores mitjana per parcel·la")
@@ -254,6 +260,8 @@ legend('topright', legend=c(round(min(ordre_mapa$riquesa_total, na.rm=TRUE),2), 
 datcol <- rbPal(10)[as.numeric(cut(ordre_mapa$calidad,breaks = 10))]
 plot(spain, col=datcol, main = "Qualitat arbrat mitjà per parcel·la")
 legend('topright', legend=c(round(min(ordre_mapa$calidad, na.rm=TRUE),2), round(max(ordre_mapa$calidad, na.rm=TRUE),2)), col=colorsllegenda, pch=16)
+
+```
 
 ```{r}
 # Rànquing 10 provincies en riquesa total
@@ -268,17 +276,16 @@ top_r_invasores
 ### 6. Resolució del problema. A partir dels resultats obtinguts, quines són les conclusions? Els resultats permeten respondre al problema?
 Conclusions. Redactar.
 
-### 7. Codi: Cal adjuntar el codi, preferiblement en R, amb el que s’ha realitzat la neteja, anàlisi i representació de les dades. Si ho preferiu, també podeu treballar en Python
-Explicar que el codi està aquí
+### 7. Codi: Cal adjuntar el codi, preferiblement en R, amb el que s’ha realitzat la El codi es troba en el present arxiu.
 
 
 ### Taula de contribucions:
 
-Contribucions
+Contribucions (en ordre alfabètic)
 
-- Investigació prèvia: 
-- Redacció de les respostes: 
-- Desenvolupament del codi: 
+- Investigació prèvia: EF, XP
+- Redacció de les respostes: EF, XP
+- Desenvolupament del codi: EF, XP
 
 
 

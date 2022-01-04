@@ -7,17 +7,21 @@ Erola Fenollosa i Xavier Pasquet
 
 ### 0. Introducció
 
-Aquest arxiu conté els apartats de la memòria de la **PRA2** juntament amb el codi per a respondre a les preguntes. Per tant el punt 7 de la memòria queda integrat en aquest mateix arxiu.
+Aquest arxiu conté els apartats de la memòria de la *PRA2* juntament amb el codi per a respondre a les preguntes. Per tant el punt 7 de la memòria queda integrat en aquest mateix arxiu.
 
 ### 1. Descripció del dataset. Perquè és important i quina pregunta/problema pretén respondre?
 
-descripció dataset perquè és important
+El conjunt de dades generat en la PRA1 (<https://github.com/erolafr/InvasivePlantsScraper/blob/main/Mem%C3%B2riaPRA1.pdf>), que rep el nom de “Biodiversitat arbustiva i arbòria nativa i invasora a Espanya” i que serà analitzat en aquesta PRA2, és d’interès principalment per a gestors en relació a la conservació de la biodiversitat a nivell nacional. El conjunt de dades permet no només comptabilitzar el nombre d’espècies d’arbres i arbusts presents a Espanya sinó també realitzar anàlisis de la seva distribució territorial i per tant permetent l’ajust de polítiques de conservació i gestió de la biodiversitat adaptades a cada regió.
 
-Tal i com presentavem en la PRA1 (<https://github.com/erolafr/InvasivePlantsScraper/blob/main/Mem%C3%B2riaPRA1.pdf>), el dataset “Biodiversitat arbustiva i arbòria nativa i invasora a Espanya”.
+Són diverses les preguntes que esperem respondre amb el seu anàlisis, juntament amb les hipòtesis de partida:
 
-Preguntes: Riquesa nativa i invasora en les diferents regions. Rànquing de províncies amb més riquesa d'espècies. Correlació entre riquesa nativa i invasora. Qualitat de l’arbrat i la seva relació amb la biodiversitat,i riquesa tant nativa com invasora.
+1.  Quina és la *riquesa* nativa (nombre d'espècies totals) i invasora en les diferents *regions? *H1: Esperem que hi hagi heterogeneïtat en la riquesa d'espècies al territori, trobant una major riquesa nativa a les províncies amb reserves naturals per exemple, i major nombre d'espècies invasores a les províncies costaneres i ciutat més grans, degut a la seva major connectivitat.
 
-Explicar hipotesis i conceptes: indexs, què signifiquen les variables…
+2.  Quines són les *10 províncies amb major riquesa d'espècies? *H2: en la línia de la hipòtesi H1 esperem que les 10 províncies amb major riquesa d’espècies siguin aquelles que contenen reserves naturals.
+
+3.  Hi ha *correlació entre riquesa nativa i invasora? *H3: Hi ha diverses hipòtesis amb suport empíric divers que sustenten que a major biodiversitat d'espècies, és més probable que hi hagi un menor nombre d'espècies invasores. Aquesta és la hipòtesi de la Resistència Biòtica (Enders et al., 2020). Així doncs esperem una correlació negativa entre la biodiversitat total d'una regió i el nombre d'espècies invasores.
+
+4.  Hi ha correlació entre la *qualitat de l'arbrat* i la *riquesa* nativa? i invasora? H4: Esperem que hi hagi una correlació positiva entre la qualitat mitjana de la parcel·la i la riquesa d’espècies, assumint que els boscos amb major nombre d’espècies tenen també més qualitat. Respecte el nombre d’espècies invasores, podríem esperar que aquelles parcel·les amb espècies invasores tinguin una qualitat de l’arbrat inferior.
 
 ### 2. Integració i selecció de les dades d’interès a analitzar.
 
@@ -45,6 +49,29 @@ library(ggplot2)
 ```
 
     ## Warning: package 'ggplot2' was built under R version 4.0.4
+
+``` r
+library("sp")
+```
+
+    ## Warning: package 'sp' was built under R version 4.0.4
+
+``` r
+library(raster)
+```
+
+    ## Warning: package 'raster' was built under R version 4.0.5
+
+    ## 
+    ## Attaching package: 'raster'
+
+    ## The following object is masked from 'package:dplyr':
+    ## 
+    ##     select
+
+``` r
+library(RColorBrewer)
+```
 
 Importem el csv
 
@@ -83,7 +110,7 @@ str(ifn3)
 
 ``` r
 # Seleccionem les variables d'interès
-ifn3_subset <- select(ifn3, c(Estadillo, Especie, Calidad, Provincia, Is_invasive))
+ifn3_subset <- dplyr::select(ifn3, c(Estadillo, Especie, Calidad, Provincia, Is_invasive))
 
 # Visualitzem el dataset filtrat:
 head(ifn3_subset)
@@ -280,34 +307,13 @@ ifn3_subset %>%
 
 #### 4.1. Selecció dels grups de dades que es volen analitzar/comparar (planificació dels anàlisis a aplicar).
 
-En primer lloc, creació de noves variables per provincia (nou dataset per provincia)
-
-Creació de grups depen de si tenen invasores o no, en cada parcela mirar si té alguna invasora o cap i agrupar en una variable. Variable que sigui “conté invasora”. Creem la mitjana i desviació estàndard de la qualitat dels arbres en la parcela per a resoldre les preguntes plantejades i tenir noció també de la variabilitat el l'atribut de la qualitat.
-
-``` r
-ifn_par <- ifn3_subset %>% group_by(Estadillo) %>% summarise(calidad = mean(Calidad), calidad_sd=sd(Calidad), conte_invasora = max(Is_invasive))
-ifn_par
-```
-
-    ## # A tibble: 4,029 x 4
-    ##    Estadillo calidad calidad_sd conte_invasora
-    ##        <int>   <dbl>      <dbl> <chr>         
-    ##  1         1    2.44      0.920 No            
-    ##  2         2    2.48      0.987 No            
-    ##  3         3    2.41      0.839 No            
-    ##  4         4    2.36      0.816 No            
-    ##  5         5    2.42      0.855 No            
-    ##  6         6    2.38      0.835 No            
-    ##  7         7    2.34      0.768 No            
-    ##  8         8    2.38      0.823 No            
-    ##  9         9    2.27      0.735 No            
-    ## 10        10    2.33      0.801 No            
-    ## # ... with 4,019 more rows
-
-A més creem també la riquesa d'espècies total i d'invasores per parcela. Incorporem tambñe en aquest dataset el valor de la província.
+En primer lloc, agrupem les dades per parcel·la d'inventari, afegint una variable "conte\_invasora" i calculanem la mitjana i desviació estàndard de la qualitat dels arbres en la parcela per a resoldre les preguntes plantejades. i tenir noció també de la variabilitat el l'atribut de la qualitat. A més també calculem també la riquesa d'espècies total i d'invasores per parcela. Incorporem també en aquest dataset el valor de la província.
 
 ``` r
 ifn_par <- ifn3_subset %>% group_by(Estadillo) %>% summarise(calidad = mean(Calidad), calidad_sd=sd(Calidad), conte_invasora = max(Is_invasive), riquesa_total = length(unique(Especie)), riquesa_invasores = sum(Is_invasive=="Yes"), provincia = max(Provincia))
+
+# Exportem les dades
+write.csv(ifn_par, "ifn_par.csv")
 
 head(ifn_par)
 ```
@@ -333,19 +339,35 @@ dim(ifn_par)
 hist(ifn_par$calidad) #Visualitzem els valors que pren la calidad
 ```
 
-![](PRA2_files/figure-markdown_github/unnamed-chunk-14-1.png)
+![](PRA2_files/figure-markdown_github/unnamed-chunk-13-1.png)
 
 ``` r
 hist(ifn_par$riquesa_total) # Visualitzem els valors que pren la riquesa total d'espècies
 ```
 
-![](PRA2_files/figure-markdown_github/unnamed-chunk-14-2.png)
+![](PRA2_files/figure-markdown_github/unnamed-chunk-13-2.png)
 
 ``` r
 hist(ifn_par$riquesa_invasores) # Visualitzem els valors que pren la riquesa d'invasores
 ```
 
-![](PRA2_files/figure-markdown_github/unnamed-chunk-14-3.png)
+![](PRA2_files/figure-markdown_github/unnamed-chunk-13-3.png)
+
+Un cop tenim les dades que ens interessen a nivell de parcel·la, les calculem a nivell de provincia
+
+``` r
+ifn_prov <- ifn_par %>% group_by(provincia) %>% summarise(calidad = mean(calidad), conte_invasora = max(conte_invasora), riquesa_total = mean(riquesa_total), riquesa_invasores = mean(riquesa_invasores))
+
+# Obtenim les regions administratives, les provincies d'espanya
+spain<- getData('GADM', country='ESP', level=2) 
+# Afegim els noms de les províncies
+codi_provincies <- read.csv(file = 'codi_provincies.csv', sep = ";") 
+ifn_prov$CODE <- ifn_prov$provincia # canviem el nom per a poder fer merge
+ifn_prov <- merge(ifn_prov, codi_provincies, by="CODE") # obtenim els noms de les províncies
+
+# Exportem les dades
+write.csv(ifn_prov, "ifn_prov.csv")
+```
 
 #### 4.2. Comprovació de la normalitat i homogeneïtat de la variància.
 
@@ -371,6 +393,8 @@ shapiro.test(ifn_par$riquesa_total)
     ## data:  ifn_par$riquesa_total
     ## W = 0.96365, p-value < 2.2e-16
 
+ELs p-valors són menors que 0.05, no podriem acceptar la normalitat de les dades, no obstant com que tenim una mostra prou gran, acceptem la normalitat pel teorema del central del límit,
+
 comprovem homogeneitat de variancies:
 
 ``` r
@@ -393,7 +417,7 @@ bartlett.test(riquesa_total ~ conte_invasora, data = ifn_par)
     ## data:  riquesa_total by conte_invasora
     ## Bartlett's K-squared = 24.711, df = 1, p-value = 6.66e-07
 
-PENDENT: comentem resultats. No hi ha normalitat però són més de 30 mostres. Segons el teorema central del limit podriem acceptar normalitat. Com procedim?
+ELs p-valors són menors que 0.05, per tant no podem acceptar la homogenetat de les variances.
 
 #### 4.3. Aplicació de proves estadístiques per comparar els grups de dades. En funció de les dades i de l’objectiu de l’estudi, aplicar proves de contrast d’hipòtesis, correlacions, regressions, etc. Aplicar almenys tres mètodes d’anàlisi diferents.
 
@@ -446,7 +470,7 @@ ggplot(ifn_par, aes(x = riquesa_total, y = riquesa_invasores)) +
 
     ## `geom_smooth()` using formula 'y ~ x'
 
-![](PRA2_files/figure-markdown_github/unnamed-chunk-18-1.png) PENDENT: Comentar resultat.
+![](PRA2_files/figure-markdown_github/unnamed-chunk-18-1.png) S'observa que pràcticament no existeix correlació entre les variables riquesa\_total i riquesa\_invasores
 
 Correlació entre biodiversitat invasora i qualitat de l’arbrat
 
@@ -484,15 +508,128 @@ ggplot(ifn_par, aes(x = calidad, y = riquesa_invasores)) +
 
 ![](PRA2_files/figure-markdown_github/unnamed-chunk-19-1.png)
 
-### 5. Representació dels resultats a partir de taules i gràfiques.
+``` r
+ggplot(ifn_par, aes(x = calidad, y = riquesa_total)) + 
+  geom_point() +
+  stat_smooth(method = "lm", col = "red")
+```
 
-resultats de riquesa i biodiversitat per provincia
+    ## `geom_smooth()` using formula 'y ~ x'
 
-ranquing per provincia
+![](PRA2_files/figure-markdown_github/unnamed-chunk-19-2.png) S'observa que pràcticament no existeix correlació entre les variables riquesa\_total i riquesa\_invasores
 
 taula anova, p-valors del contrast d’hipotesi
 
-grafics de correlacions
+``` r
+# Calcul de l'ANOVA per qualitat i riquesa total
+anova <- aov(ifn_prov$calidad ~ ifn_prov$riquesa_total)
+summary(anova)
+```
+
+    ##                        Df Sum Sq  Mean Sq F value Pr(>F)
+    ## ifn_prov$riquesa_total  1 0.0050 0.004985   0.204  0.655
+    ## Residuals              27 0.6598 0.024438
+
+El p-value és molt superior a 0,05, per tant no podem acceptar la hipotesis alternativa que la riquesa total es significativa de la qualitat.
+
+``` r
+# Calcul de l'ANOVA per qualitat i si la província conté invasores
+anova <- aov(ifn_prov$calidad ~ ifn_prov$conte_invasora)
+summary(anova)
+```
+
+    ##                         Df Sum Sq Mean Sq F value Pr(>F)
+    ## ifn_prov$conte_invasora  1 0.0025 0.00249   0.101  0.752
+    ## Residuals               27 0.6623 0.02453
+
+El p-value és molt superior a 0,05, per tant no podem acceptar la hipotesis alternativa que la riquesa total es significativa de la qualitat.
+
+### 5. Representació dels resultats a partir de taules i gràfiques.
+
+Mapes de riquesa i qualitat per província
+
+``` r
+ordre_mapa <- ifn_prov[match(as.factor(spain$NAME_2), ifn_prov$NAME_2), ]
+
+rbPal <- colorRampPalette(c('#f0f9e8','firebrick1'))
+colorsllegenda<- c("#f0f9e8","firebrick1")
+
+datcol <- rbPal(10)[as.numeric(cut(ordre_mapa$riquesa_invasores,breaks = 10))]
+plot(spain, col=datcol, main = "Riquesa espècies invasores mitjana per parcel·la")
+legend('topright', legend=c(round(min(ordre_mapa$riquesa_invasores, na.rm=TRUE),2), round(max(ordre_mapa$riquesa_invasores, na.rm=TRUE),2)), col=colorsllegenda, pch=16)
+```
+
+![](PRA2_files/figure-markdown_github/unnamed-chunk-22-1.png)
+
+``` r
+datcol <- rbPal(10)[as.numeric(cut(ordre_mapa$riquesa_total,breaks = 10))]
+plot(spain, col=datcol, main = "Riquesa total mitjana per parcel·la")
+legend('topright', legend=c(round(min(ordre_mapa$riquesa_total, na.rm=TRUE),2), round(max(ordre_mapa$riquesa_total, na.rm=TRUE),2)), col=colorsllegenda, pch=16)
+```
+
+![](PRA2_files/figure-markdown_github/unnamed-chunk-22-2.png)
+
+``` r
+datcol <- rbPal(10)[as.numeric(cut(ordre_mapa$calidad,breaks = 10))]
+plot(spain, col=datcol, main = "Qualitat arbrat mitjà per parcel·la")
+legend('topright', legend=c(round(min(ordre_mapa$calidad, na.rm=TRUE),2), round(max(ordre_mapa$calidad, na.rm=TRUE),2)), col=colorsllegenda, pch=16)
+```
+
+![](PRA2_files/figure-markdown_github/unnamed-chunk-22-3.png)
+
+``` r
+# Rànquing 10 provincies en riquesa total
+top_r_total <- ifn_prov %>%filter(rank(desc(riquesa_total))<=10)
+top_r_total
+```
+
+    ##    CODE provincia  calidad conte_invasora riquesa_total riquesa_invasores
+    ## 1    33        33 2.399460            Yes      15.24000       0.020000000
+    ## 2    39        39 2.351027             No      13.37500       0.000000000
+    ## 3    41        41 2.465021             No      20.00000       0.000000000
+    ## 4    43        43 2.300548             No      19.00000       0.000000000
+    ## 5    44        44 2.353956            Yes      15.67541       0.009836066
+    ## 6    45        45 2.321001             No      17.65854       0.000000000
+    ## 7    47        47 2.379251            Yes      16.83333       0.555555556
+    ## 8    48        48 2.380434            Yes      23.52381       0.222222222
+    ## 9    49        49 2.401753            Yes      22.44048       0.103174603
+    ## 10   50        50 2.389206            Yes      22.94176       0.219633943
+    ##        NAME_2
+    ## 1    Asturias
+    ## 2   Cantabria
+    ## 3     Sevilla
+    ## 4   Tarragona
+    ## 5      Teruel
+    ## 6      Toledo
+    ## 7  Valladolid
+    ## 8     Vizcaya
+    ## 9      Zamora
+    ## 10   Zaragoza
+
+``` r
+# Rànquing 10 provincies en riquesainvasora
+top_r_invasores <- ifn_prov %>%filter(rank(desc(riquesa_invasores))<=10)
+top_r_invasores
+```
+
+    ##   CODE provincia  calidad conte_invasora riquesa_total riquesa_invasores
+    ## 1   33        33 2.399460            Yes      15.24000       0.020000000
+    ## 2   42        42 2.382521            Yes      13.03860       0.108771930
+    ## 3   44        44 2.353956            Yes      15.67541       0.009836066
+    ## 4   46        46 2.335961            Yes      11.86152       0.013119534
+    ## 5   47        47 2.379251            Yes      16.83333       0.555555556
+    ## 6   48        48 2.380434            Yes      23.52381       0.222222222
+    ## 7   49        49 2.401753            Yes      22.44048       0.103174603
+    ## 8   50        50 2.389206            Yes      22.94176       0.219633943
+    ##       NAME_2
+    ## 1   Asturias
+    ## 2      Soria
+    ## 3     Teruel
+    ## 4   Valencia
+    ## 5 Valladolid
+    ## 6    Vizcaya
+    ## 7     Zamora
+    ## 8   Zaragoza
 
 ### 6. Resolució del problema. A partir dels resultats obtinguts, quines són les conclusions? Els resultats permeten respondre al problema?
 
