@@ -20,6 +20,14 @@ Llistat plantes invasores: https://www.miteco.gob.es/es/biodiversidad/temas/cons
 Erola Fenollosa i Xavier Pascuet
 
 ## Fitxers
-- MemòriaPRA1.pdf: Conté les respostes als apartats demanats a la PRA1 amb descripció i context del dataset així com descripció del contingut, inspiració, agraïments i llicència.
-- ifn3_invasives.py: Conté el codi per a fer web scraping a l'Inventari Forestal i el llistat de flora invasora.
-- codi_espècies.csv: Relació dels codis utilitzats en l'Inventari forestal Nacional i el nom científic de les espècies. Necesari per si es vol reproduir el codi.
+### Corresponents a la PRA1
+- [MemòriaPRA1.pdf](https://github.com/erolafr/InvasivePlantsScraper/blob/main/Mem%C3%B2riaPRA1.pdf): Conté les respostes als apartats demanats a la PRA1 amb descripció i context del dataset així com descripció del contingut, inspiració, agraïments i llicència.
+- [ifn3_invasives.py](https://github.com/erolafr/InvasivePlantsScraper/blob/main/ifn3_invasives.py): Conté el codi per a fer web scraping a l'Inventari Forestal i el llistat de flora invasora.
+- [codi_espècies.csv] (https://github.com/erolafr/InvasivePlantsScraper/blob/main/codi_especies.csv): Relació dels codis utilitzats en l'Inventari forestal Nacional i el nom científic de les espècies. Necesari per si es vol reproduir el codi.
+
+### Corresponents a la PRA2:
+- [PRA2.md](https://github.com/erolafr/InvasivePlantsScraper/blob/main/PRA2.md): Arxiu amb el codi i memòria de la PRA2
+- [PRA2.Rmd](https://github.com/erolafr/InvasivePlantsScraper/blob/main/PRA2.Rmd): Arxiu Rmd amb el codi raw de la PRA2
+- [ifn3.csv](https://github.com/erolafr/InvasivePlantsScraper/blob/main/ifn3.csv): Dataset inicial
+- [ifn3_par.csv](https://github.com/erolafr/InvasivePlantsScraper/blob/main/ifn_par.csv): Dataset final per parcela
+- [ifn_prov.csv](https://github.com/erolafr/InvasivePlantsScraper/blob/main/ifn_prov.csv): Dataset final per provincia
