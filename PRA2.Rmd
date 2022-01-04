@@ -142,11 +142,8 @@ ifn3_subset %>%
 
 ### 4. Anàlisi de les dades. 
 #### 4.1. Selecció dels grups de dades que es volen analitzar/comparar (planificació dels anàlisis a aplicar). 
-En primer lloc, creació de noves variables per provincia (nou dataset per provincia)
+En primer lloc, agrupem les dades per parcel·la d'inventari, afegint una variable "conte_invasora" i calculanem la mitjana i desviació estàndard de la qualitat dels arbres en la parcela per a resoldre les preguntes plantejades. i tenir noció també de la variabilitat el l'atribut de la qualitat. A més també calculem també la riquesa d'espècies total i d'invasores per parcela. Incorporem també en aquest dataset el valor de la província.
 
-Creació de grups depen de si tenen invasores o no, en cada parcela mirar si té alguna invasora o cap i agrupar en una variable. Variable que sigui “conté invasora”. Creem la mitjana i desviació estàndard de la qualitat dels arbres en la parcela per a resoldre les preguntes plantejades i tenir noció també de la variabilitat el l'atribut de la qualitat.
-
-A més creem també la riquesa d'espècies total i d'invasores per parcela. Incorporem també en aquest dataset el valor de la província.
 ```{r}
 ifn_par <- ifn3_subset %>% group_by(Estadillo) %>% summarise(calidad = mean(Calidad), calidad_sd=sd(Calidad), conte_invasora = max(Is_invasive), riquesa_total = length(unique(Especie)), riquesa_invasores = sum(Is_invasive=="Yes"), provincia = max(Provincia))
 
@@ -157,20 +154,26 @@ hist(ifn_par$riquesa_total) # Visualitzem els valors que pren la riquesa total d
 hist(ifn_par$riquesa_invasores) # Visualitzem els valors que pren la riquesa d'invasores
 ```
 
+Un cop tenim les dades que ens interessen a nivell de parcel·la, les calculem a nivell de provincia
+
+```{r}
+ifn_prov <- ifn_par %>% group_by(provincia) %>% summarise(calidad = mean(calidad), conte_invasora = max(conte_invasora), riquesa_total = mean(riquesa_total), riquesa_invasores = mean(riquesa_invasores)) 
+
+```
 #### 4.2. Comprovació de la normalitat i homogeneïtat de la variància. 
 Comprovem normalitat de les variables d'interès
 ```{r}
 shapiro.test(ifn_par$calidad) 
 shapiro.test(ifn_par$riquesa_total) 
 ```
+ELs p-valors són menors que 0.05, no podriem acceptar la normalitat de les dades, no obstant com que tenim una mostra prou gran, acceptem la normalitat pel teorema del central del límit,
 
 comprovem homogeneitat de variancies:
 ```{r}
 bartlett.test(calidad ~ conte_invasora, data = ifn_par)
 bartlett.test(riquesa_total ~ conte_invasora, data = ifn_par)
 ```
-
-PENDENT: comentem resultats. No hi ha normalitat però són més de 30 mostres. Segons el teorema central del limit podriem acceptar normalitat. Com procedim? 
+ELs p-valors són menors que 0.05, per tant no podem acceptar la homogenetat de les variances.
 
 
 #### 4.3. Aplicació de proves estadístiques per comparar els grups de dades. En funció de les dades i de l’objectiu de l’estudi, aplicar proves de contrast d’hipòtesis, correlacions, regressions, etc. Aplicar almenys tres mètodes d’anàlisi diferents. 
@@ -180,7 +183,6 @@ Contrast d’hipotesis de si les parceles amb alguna invasora tenen millor quali
 # Visualitzem en primer lloc:
 boxplot(ifn_par$riquesa_total ~ ifn_par$conte_invasora)
 boxplot(ifn_par$calidad ~ ifn_par$conte_invasora)
-
 ```
 
 Correlació entre biodiversitat nativa i la biodiversitat invasora 
@@ -193,7 +195,7 @@ ggplot(ifn_par, aes(x = riquesa_total, y = riquesa_invasores)) +
   stat_smooth(method = "lm", col = "red")
 
 ```
-PENDENT: Comentar resultat.
+S'observa que pràcticament no existeix correlació entre les variables riquesa_total i riquesa_invasores
 
 Correlació entre biodiversitat invasora i qualitat de l’arbrat
 ```{r}
@@ -207,19 +209,26 @@ ggplot(ifn_par, aes(x = calidad, y = riquesa_invasores)) +
 ggplot(ifn_par, aes(x = calidad, y = riquesa_total)) + 
   geom_point() +
   stat_smooth(method = "lm", col = "red")
-
 ```
+S'observa que pràcticament no existeix correlació entre les variables riquesa_total i riquesa_invasores
 
+
+taula anova, p-valors del contrast d’hipotesi
+```{r}
+# Calcul de l'ANOVA per qualitat i riquesa total
+anova <- aov(ifn_prov$calidad ~ ifn_prov$riquesa_total)
+summary(anova)
+```
+El p-value és molt superior a 0,05, per tant no podem acceptar la hipotesis alternativa que la riquesa total es significativa de la qualitat.
+
+```{r}
+# Calcul de l'ANOVA per qualitat i si la província conté invasores
+anova <- aov(ifn_prov$calidad ~ ifn_prov$conte_invasora)
+summary(anova)
+```
+El p-value és molt superior a 0,05, per tant no podem acceptar la hipotesis alternativa que la riquesa total es significativa de la qualitat.
 
 ### 5. Representació dels resultats a partir de taules i gràfiques. 
-resultats de riquesa i biodiversitat per provincia
-```{r}
-ifn_prov <- ifn_par %>% group_by(provincia) %>% summarise(calidad = mean(calidad), conte_invasora = max(conte_invasora), riquesa_total = mean(riquesa_total), riquesa_invasores = mean(riquesa_invasores)) 
-
-
-```
-
-ranquing per provincia
 ```{r}
 # Rànquing 10 provincies en riquesa total
 top_r_total <- ifn_prov %>%filter(rank(desc(riquesa_total))<=10)
@@ -228,26 +237,6 @@ top_r_total
 # Rànquing 10 provincies en riquesainvasora
 top_r_invasores <- ifn_prov %>%filter(rank(desc(riquesa_invasores))<=10)
 top_r_invasores
-```
-
-taula anova, p-valors del contrast d’hipotesi
-```{r}
-# Calcul de l'ANOVA per qualitat i riquesa total
-anova <- aov(ifn_prov$calidad ~ ifn_prov$riquesa_total)
-summary(anova)
-```
-
-El p-value és molt superior a 0,05, per tant no podem acceptar la hipotesis alternativa que la riquesa total es significativa de la qualitat.
-```{r}
-# Calcul de l'ANOVA per qualitat i si la província conté invasores
-anova <- aov(ifn_prov$calidad ~ ifn_prov$conte_invasora)
-summary(anova)
-```
-El p-value és molt superior a 0,05, per tant no podem acceptar la hipotesis alternativa que la riquesa total es significativa de la qualitat.
-
-grafics de correlacions
-```{r}
-
 ```
 
 ### 6. Resolució del problema. A partir dels resultats obtinguts, quines són les conclusions? Els resultats permeten respondre al problema?
